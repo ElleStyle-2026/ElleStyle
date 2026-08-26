@@ -23,6 +23,7 @@ export interface ProductReviewSectionProps {
 }
 
 import { publicProductService } from '../../services/publicProductService';
+import { env } from '../../config/env';
 
 export const ProductReviewSection: React.FC<ProductReviewSectionProps> = ({ productId, ratingAverage, reviewCount, reviews: initialReviews }) => {
   const { user, accessToken } = useAuth();
@@ -124,7 +125,7 @@ export const ProductReviewSection: React.FC<ProductReviewSectionProps> = ({ prod
         formData.append('category', 'reviews');
         formData.append('productSlug', productId); // using productId for organization
         
-        const uploadRes = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/upload`, {
+        const uploadRes = await fetch(`${env.API_URL}/api/v1/upload`, {
           method: 'POST',
           headers: {
             Authorization: `Bearer ${accessToken}`

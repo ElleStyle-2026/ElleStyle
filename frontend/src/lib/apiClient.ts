@@ -1,4 +1,5 @@
 import { getApiToken } from './tokenManager';
+import { env } from '../config/env';
 
 export class ApiError extends Error {
   status: number;
@@ -39,13 +40,14 @@ export async function apiClient<T = any>(url: string, options: FetchOptions = {}
   
   for (let attempt = 0; attempt <= actualRetries; attempt++) {
     try {
-      const response = await fetch(url, fetchOptions);
+      const requestUrl = url.startsWith('http') ? url : `${env.API_URL}${url}`;
+      const response = await fetch(requestUrl, fetchOptions);
       
       if (!response.ok) {
         // Automatically refresh token on 401 Unauthorized
         if (response.status === 401 && !(options as any)._isRetry && !url.includes('/api/v1/auth/')) {
           try {
-            const refreshRes = await fetch('/api/v1/auth/refresh-token', { method: 'POST' });
+            const refreshRes = await fetch(`${env.API_URL}/api/v1/auth/refresh-token`, { method: 'POST' });
             if (refreshRes.ok) {
               const data = await refreshRes.json();
               if (data.success && data.accessToken) {

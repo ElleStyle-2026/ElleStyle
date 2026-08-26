@@ -8,6 +8,7 @@ const env = {
   RESEND_API_KEY: process.env.RESEND_API_KEY,
   EMAIL_FROM: process.env.EMAIL_FROM || 'ElleStyle <support@ellestyle.in>',
   APP_URL: process.env.APP_URL || 'http://localhost:5173',
+  CORS_ORIGINS: process.env.CORS_ORIGINS || process.env.APP_URL || 'http://localhost:5173',
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID
 };
 

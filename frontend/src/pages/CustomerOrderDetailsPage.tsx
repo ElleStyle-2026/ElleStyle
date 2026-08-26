@@ -61,7 +61,7 @@ export default function CustomerOrderDetailsPage() {
           // Normally we'd call verify API here or just wait for webhook
           // Since the original verify API does it, let's call it:
           try {
-            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/payments/verify`, {
+            const res = await fetch(`${env.API_URL}/api/v1/payments/verify`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
