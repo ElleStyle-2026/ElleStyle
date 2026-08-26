@@ -55,7 +55,7 @@ export const TextReviewMarqueeSection: React.FC = () => {
     <div className={`flex w-max gap-6 mb-6 ${isLtr ? 'animate-marquee-ltr' : 'animate-marquee-rtl'}`}>
       {reviews.length > 0 && [...reviews, ...reviews, ...reviews].map((review, index) => (
         <ReviewTextCard
-          key={`${review.id}-₹{index}`}
+          key={`${review.id}-${index}`}
           quote={review.quote}
           userName={review.userName}
           userLocation={review.userLocation}

@@ -117,7 +117,12 @@ export const ProductDetailSection: React.FC<ProductDetailSectionProps> = ({ prod
   const handleAddToCart = () => {
     let price = currentPrice;
     let qty = quantity;
-    let sellingModeInfo = undefined;
+    let sellingModeInfo: {
+      mode: 'set' | 'standard' | 'moq';
+      setId?: string;
+      setQuantity?: number;
+      moqQuantity?: number;
+    } | undefined;
     
     if (product.sellingMode === 'set' && product.setOptions) {
       const opt = product.setOptions.find(o => o._id === selectedSetOptionId);
@@ -358,7 +363,7 @@ export const ProductDetailSection: React.FC<ProductDetailSectionProps> = ({ prod
                     <div className="flex items-center gap-2 mt-1">
                       <span className="text-xs font-semibold text-gray-900">₹{Math.round(opt.price)}</span>
                       {(opt.compareAtPrice || 0) > opt.price && (
-                        <span className="text-xs font-normal text-gray-400 line-through">₹{Math.round(opt.compareAtPrice)}</span>
+                        <span className="text-xs font-normal text-gray-400 line-through">₹{Math.round(opt.compareAtPrice || 0)}</span>
                       )}
                     </div>
                   </button>
@@ -580,7 +585,7 @@ export const ProductDetailSection: React.FC<ProductDetailSectionProps> = ({ prod
                   <div>
                     <p className="font-sans text-[11px] uppercase tracking-[0.05em] mb-1" style={{ color: 'var(--text-secondary)' }}>Discount</p>
                     <p className="font-sans text-[13px] font-medium leading-tight" style={{ color: 'var(--text-primary)' }}>
-                      {(product.compareAtPrice || 0) > currentPrice ? `Disc ${Math.round(((product.compareAtPrice - currentPrice) / product.compareAtPrice) * 100)}%` : 'No Discount'}
+                      {product.compareAtPrice && product.compareAtPrice > currentPrice ? `Disc ${Math.round(((product.compareAtPrice - currentPrice) / product.compareAtPrice) * 100)}%` : 'No Discount'}
                     </p>
                   </div>
                 </div>
