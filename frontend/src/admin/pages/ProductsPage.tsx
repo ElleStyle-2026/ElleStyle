@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { PageHeader } from '../components/shared/PageHeader';
@@ -6,32 +6,51 @@ import { DataTable, type Column } from '../components/shared/DataTable';
 import { StatusBadge } from '../components/shared/StatusBadge';
 import { ConfirmModal } from '../components/shared/ConfirmModal';
 import { adminProductService, type AdminProduct } from '../services/productService';
+import { adminCategoryService, type AdminCategory } from '../services/categoryService';
+import { adminSubCategoryService, type AdminSubCategory } from '../services/subCategoryService';
 
 export default function ProductsPage() {
   const navigate = useNavigate();
   const [products, setProducts] = useState<AdminProduct[]>([]);
+  const [categories, setCategories] = useState<AdminCategory[]>([]);
+  const [subCategories, setSubCategories] = useState<AdminSubCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  
+  // Filter state
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedSubCategory, setSelectedSubCategory] = useState<string>('all');
   
   // Delete Modal State
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<AdminProduct | null>(null);
 
-  const fetchProducts = async () => {
+  const fetchData = async () => {
     try {
       setLoading(true);
-      const data = await adminProductService.getProducts();
-      setProducts(data);
+      const [productsData, categoriesData, subCategoriesData] = await Promise.all([
+        adminProductService.getProducts(),
+        adminCategoryService.getCategories(),
+        adminSubCategoryService.getSubCategories()
+      ]);
+      setProducts(productsData);
+      setCategories(categoriesData);
+      setSubCategories(subCategoriesData);
     } catch (error) {
-      console.error('Failed to fetch products', error);
+      console.error('Failed to fetch data', error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchProducts();
+    fetchData();
   }, []);
+  
+  // Reset subcategory when category changes
+  useEffect(() => {
+    setSelectedSubCategory('all');
+  }, [selectedCategory]);
 
   const handleDeleteClick = (e: React.MouseEvent, product: AdminProduct) => {
     e.stopPropagation();
@@ -43,7 +62,6 @@ export default function ProductsPage() {
     if (!productToDelete) return;
     try {
       await adminProductService.deleteProduct(productToDelete._id);
-      // Optimistic update
       setProducts(products.filter(p => p._id !== productToDelete._id));
     } catch (error) {
       console.error('Failed to delete product', error);
@@ -77,7 +95,6 @@ export default function ProductsPage() {
       key: 'category', 
       header: 'Category',
       render: (product) => {
-        // category can be populated object or just ID
         if (typeof product.category === 'object' && product.category !== null) {
           return (product.category as any).name || 'Unknown';
         }
@@ -137,20 +154,42 @@ export default function ProductsPage() {
     const searchLower = search.toLowerCase();
     const nameMatch = p.name?.toLowerCase().includes(searchLower);
     
-    // Safely check category name
+    let categoryId = '';
     let categoryName = '';
     if (typeof p.category === 'object' && p.category !== null) {
+      categoryId = (p.category as any)._id || '';
       categoryName = (p.category as any).name || '';
     } else if (typeof p.category === 'string') {
+      categoryId = p.category;
       categoryName = p.category;
     }
-    const categoryMatch = categoryName.toLowerCase().includes(searchLower);
+    
+    let subCategoryId = '';
+    if (typeof p.subCategory === 'object' && p.subCategory !== null) {
+      subCategoryId = (p.subCategory as any)._id || '';
+    } else if (typeof p.subCategory === 'string') {
+      subCategoryId = p.subCategory;
+    }
 
-    return nameMatch || categoryMatch;
+    const categoryMatch = selectedCategory === 'all' || categoryId === selectedCategory;
+    const subCategoryMatch = selectedSubCategory === 'all' || subCategoryId === selectedSubCategory;
+    const searchMatch = nameMatch || categoryName.toLowerCase().includes(searchLower);
+
+    return searchMatch && categoryMatch && subCategoryMatch;
   });
 
+  const activeSubCategories = useMemo(() => {
+    if (selectedCategory === 'all') return [];
+    return subCategories.filter(sub => {
+      if (typeof sub.category === 'object' && sub.category !== null) {
+        return (sub.category as any)._id === selectedCategory;
+      }
+      return sub.category === selectedCategory;
+    });
+  }, [subCategories, selectedCategory]);
+
   return (
-    <div>
+    <div className="space-y-6">
       <PageHeader
         title="Products"
         actionButton={{
@@ -159,6 +198,38 @@ export default function ProductsPage() {
           onClick: () => navigate('/admin/products/new')
         }}
       />
+      
+      {/* Filters Section */}
+      <div className="flex flex-col sm:flex-row gap-4 bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+        <div className="flex-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Filter by Category</label>
+          <select 
+            value={selectedCategory} 
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="w-full h-10 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm"
+          >
+            <option value="all">All Categories</option>
+            {categories.map(cat => (
+              <option key={cat._id} value={cat._id}>{cat.name}</option>
+            ))}
+          </select>
+        </div>
+        
+        <div className="flex-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Filter by Sub-Category</label>
+          <select 
+            value={selectedSubCategory} 
+            onChange={(e) => setSelectedSubCategory(e.target.value)}
+            disabled={selectedCategory === 'all' || activeSubCategories.length === 0}
+            className="w-full h-10 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm disabled:bg-gray-50 disabled:text-gray-500"
+          >
+            <option value="all">All Sub-Categories</option>
+            {activeSubCategories.map(sub => (
+              <option key={sub._id} value={sub._id}>{sub.name}</option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       <DataTable
         data={filteredProducts}
@@ -167,14 +238,14 @@ export default function ProductsPage() {
         isLoading={loading}
         searchValue={search}
         onSearchChange={setSearch}
-        searchPlaceholder="Search products..."
+        searchPlaceholder="Search products by name or category..."
         onRowClick={(item) => navigate(`/admin/products/${item._id}`)}
       />
 
       <ConfirmModal
         isOpen={deleteModalOpen}
         title="Delete Product"
-        message={`Are you sure you want to delete "₹{productToDelete?.name}"? This action will set the product status to inactive (soft delete).`}
+        message={`Are you sure you want to delete "${productToDelete?.name}"? This action will set the product status to inactive (soft delete).`}
         confirmLabel="Delete"
         onConfirm={confirmDelete}
         onCancel={() => setDeleteModalOpen(false)}
@@ -182,3 +253,4 @@ export default function ProductsPage() {
     </div>
   );
 }
+

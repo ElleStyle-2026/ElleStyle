@@ -46,7 +46,7 @@ export const HeroBannerCarousel: React.FC = () => {
       {/* Slider Container */}
       <div
         className="flex w-full h-full transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)]"
-        style={{ transform: `translateX(-₹{currentIndex * 100}%)` }}
+        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {activeBanners.map((banner: PublicLandingBanner, index: number) => {
           const isActive = index === currentIndex;

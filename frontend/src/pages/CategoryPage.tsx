@@ -374,7 +374,7 @@ const CategoryPage: React.FC = () => {
                           className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all border ${
                             isSelected ? 'bg-[#03989E]/15 border-[#03989E] text-gray-900 font-bold shadow-xs' : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
                           }`}
-                          title={`${col.name} (₹{col.count} items)`}
+                          title={`${col.name} (${col.count} items)`}
                         >
                           <span className="w-3.5 h-3.5 rounded-full border border-black/10 shrink-0 shadow-inner" style={{ backgroundColor: col.hex }}></span>
                           <span>{col.name}</span>
@@ -434,7 +434,7 @@ const CategoryPage: React.FC = () => {
                         onClick={() => {
                           const min = minPriceInput || '0';
                           const max = maxPriceInput || '100000';
-                          setSingleFilter('price', `${min}-₹{max}`);
+                          setSingleFilter('price', `${min}-${max}`);
                         }}
                         className="h-8 px-3 bg-[#1F1F1F] text-white text-[11px] rounded uppercase font-semibold hover:bg-gray-800 transition-colors shrink-0"
                       >

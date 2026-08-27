@@ -76,7 +76,7 @@ export const Cursor: React.FC<CursorProps> = ({ size = 20}) => {
       currentPos.current = { x: newX, y: newY };
       
       // Center using CSS transform
-      cursorRef.current.style.transform = `translate(₹{newX}px, ${newY}px) translate(-50%, -50%)`;
+      cursorRef.current.style.transform = `translate(${newX}px, ${newY}px) translate(-50%, -50%)`;
 
       requestRef.current = requestAnimationFrame(animate);
     };

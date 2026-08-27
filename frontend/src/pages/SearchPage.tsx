@@ -92,9 +92,9 @@ export default function SearchPage() {
           </Typography>
           <p className="text-gray-600">
             {isLoading 
-              ? `Searching for "₹{query}"...` 
+              ? `Searching for "${query}"...` 
               : query 
-                ? `Showing results for "₹{query}"` 
+                ? `Showing results for "${query}"` 
                 : 'Enter a search term to find products'}
           </p>
         </header>

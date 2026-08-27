@@ -132,7 +132,7 @@ export default function CouponsPage() {
       <ConfirmModal
         isOpen={deleteModalOpen}
         title="Delete Coupon"
-        message={`Are you sure you want to delete coupon code "₹{couponToDelete?.code}"?`}
+        message={`Are you sure you want to delete coupon code "${couponToDelete?.code}"?`}
         confirmLabel="Delete"
         onConfirm={confirmDelete}
         onCancel={() => setDeleteModalOpen(false)}

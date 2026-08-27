@@ -194,8 +194,8 @@ const ProfilePage: React.FC = () => {
   };
 
   const settingsItems: SettingItem[] = [
-    { id: 'email', label: `Email: ₹{user?.email || 'N/A'}`, icon: EmailIcon, type: 'link', onClick: () => {} },
-    { id: 'phone', label: `Phone: ₹{user?.phone || 'Not provided'}`, icon: PhoneIcon, type: 'link', onClick: () => setIsEditing(true) },
+    { id: 'email', label: `Email: ${user?.email || 'N/A'}`, icon: EmailIcon, type: 'link', onClick: () => {} },
+    { id: 'phone', label: `Phone: ${user?.phone || 'Not provided'}`, icon: PhoneIcon, type: 'link', onClick: () => setIsEditing(true) },
     { id: 'notification', label: 'Notification', icon: NotificationIcon, type: 'toggle', isActive: notificationsEnabled },
     { id: 'logout', label: 'Sign Out', icon: LogoutIcon, type: 'link', onClick: handleLogout },
   ];

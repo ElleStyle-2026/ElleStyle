@@ -286,7 +286,7 @@ export default function SubCategoriesPage() {
         message={
           itemToDelete && (itemToDelete.productCount || 0) > 0
             ? `⚠️ WARNING: This SubCategory has ${itemToDelete.productCount} active products assigned! Deleting will orphan them. Are you sure you want to attempt deletion?`
-            : `Are you sure you want to delete "₹{itemToDelete?.name}"?`
+            : `Are you sure you want to delete "${itemToDelete?.name}"?`
         }
         confirmLabel="Delete"
         onConfirm={confirmDelete}

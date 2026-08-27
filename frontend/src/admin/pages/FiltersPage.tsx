@@ -255,7 +255,7 @@ export default function FiltersPage() {
       <ConfirmModal
         isOpen={deleteModalOpen}
         title="Remove Filter Group"
-        message={`Are you sure you want to remove the "₹{itemToDelete?.name}" filter? It will no longer appear on customer collection pages.`}
+        message={`Are you sure you want to remove the "${itemToDelete?.name}" filter? It will no longer appear on customer collection pages.`}
         confirmLabel="Remove Filter"
         onConfirm={confirmDelete}
         onCancel={() => setDeleteModalOpen(false)}

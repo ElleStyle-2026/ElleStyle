@@ -171,7 +171,7 @@ export default function CategoriesPage() {
       <ConfirmModal
         isOpen={deleteModalOpen}
         title="Delete Category"
-        message={`Are you sure you want to delete "₹{categoryToDelete?.name}"?`}
+        message={`Are you sure you want to delete "${categoryToDelete?.name}"?`}
         confirmLabel="Delete"
         onConfirm={confirmDelete}
         onCancel={() => setDeleteModalOpen(false)}

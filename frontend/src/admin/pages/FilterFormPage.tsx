@@ -94,7 +94,7 @@ export default function FilterFormPage() {
 
   return (
     <div className="pb-12 max-w-3xl mx-auto">
-      <PageHeader title={isEditing ? `Configure "₹{formData.name}" Filter` : 'New Filter Group Configuration'} />
+      <PageHeader title={isEditing ? `Configure "${formData.name}" Filter` : 'New Filter Group Configuration'} />
 
       <form onSubmit={handleSubmit} className="space-y-6 mt-6">
         <div className="bg-white shadow rounded-lg p-6 space-y-6 border border-gray-100">

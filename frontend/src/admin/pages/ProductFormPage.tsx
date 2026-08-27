@@ -230,8 +230,8 @@ export default function ProductFormPage() {
       for (let i = 0; i < files.length; i++) {
         const data = new FormData();
         data.append('category', 'ProductVariants');
-        data.append('productSlug', (formData.slug || 'option') + `-var-₹{variantIdx}-₹{Date.now()}-₹{i}`);
-        data.append('images', files[i]);
+        data.append('productSlug', (formData.slug || 'option') + `-var-${variantIdx}-${Date.now()}-${i}`);
+        data.append('media', files[i]);
 
         const result = await apiClient('/api/v1/upload', {
           method: 'POST',
@@ -328,7 +328,7 @@ export default function ProductFormPage() {
     data.append('category', category);
     data.append('productSlug', slug);
     newFiles.forEach((img) => {
-      if (img.file) data.append('images', img.file);
+      if (img.file) data.append('media', img.file);
     });
 
     const result = await apiClient('/api/v1/upload', { method: 'POST', body: data });
@@ -703,7 +703,7 @@ export default function ProductFormPage() {
                               type="number"
                               min="0"
                               step="0.01"
-                              placeholder={`Base (₹{formData.price || 0})`}
+                              placeholder={`Base (${formData.price || 0})`}
                               value={v.price || ''}
                               onChange={(e) => updateVariantField(index, 'price', parseFloat(e.target.value) || 0)}
                               className="w-full h-9 border border-gray-300 rounded-lg px-2.5 text-xs focus:border-[#03989E] focus:outline-none bg-white shadow-2xs text-gray-800"
@@ -814,7 +814,7 @@ export default function ProductFormPage() {
                               >
                                 <img
                                   src={img.secure_url}
-                                  alt={`V-₹{index}-img-₹{imgIdx}`}
+                                  alt={`V-${index}-img-${imgIdx}`}
                                   className="w-full h-22 object-cover aspect-[3/4] flex-1 cursor-pointer"
                                   onClick={() => setVariantPrimaryImage(index, imgIdx)}
                                   title="Click to set as Primary Variant Image"
@@ -950,14 +950,14 @@ export default function ProductFormPage() {
                 if (baseColorAttr && baseColorAttr.value) {
                   const name = String(baseColorAttr.value);
                   const hex = baseColorHexAttr ? String(baseColorHexAttr.value) : '#000000';
-                  const key = `${name.toLowerCase().trim()}-₹{hex.toLowerCase().trim()}`;
+                  const key = `${name.toLowerCase().trim()}-${hex.toLowerCase().trim()}`;
                   detectedColorsMap.set(key, { name, hex });
                 }
 
                 // 2. Detect from Variants
                 (formData.variants || []).forEach((v: any) => {
                   if (v.colorName && v.colorHex) {
-                    const key = `${v.colorName.toLowerCase().trim()}-₹{v.colorHex.toLowerCase().trim()}`;
+                    const key = `${v.colorName.toLowerCase().trim()}-${v.colorHex.toLowerCase().trim()}`;
                     if (!detectedColorsMap.has(key)) {
                       detectedColorsMap.set(key, { name: v.colorName, hex: v.colorHex });
                     }
@@ -966,12 +966,12 @@ export default function ProductFormPage() {
                 const detectedColors = Array.from(detectedColorsMap.values());
 
                 const isColorSaved = (col: any) => {
-                  const key = `${col.name.toLowerCase().trim()}-₹{col.hex.toLowerCase().trim()}`;
-                  return (formData.colors || []).some((c: any) => `${c.name.toLowerCase().trim()}-₹{c.hex.toLowerCase().trim()}` === key);
+                  const key = `${col.name.toLowerCase().trim()}-${col.hex.toLowerCase().trim()}`;
+                  return (formData.colors || []).some((c: any) => `${c.name.toLowerCase().trim()}-${c.hex.toLowerCase().trim()}` === key);
                 };
 
                 const handleDetectedColorToggle = (col: any, checked: boolean) => {
-                  const key = `${col.name.toLowerCase().trim()}-₹{col.hex.toLowerCase().trim()}`;
+                  const key = `${col.name.toLowerCase().trim()}-${col.hex.toLowerCase().trim()}`;
                   let newColors = [...(formData.colors || [])];
                   
                   if (checked) {
@@ -979,14 +979,14 @@ export default function ProductFormPage() {
                       newColors.push(col);
                     }
                   } else {
-                    newColors = newColors.filter((c: any) => `${c.name.toLowerCase().trim()}-₹{c.hex.toLowerCase().trim()}` !== key);
+                    newColors = newColors.filter((c: any) => `${c.name.toLowerCase().trim()}-${c.hex.toLowerCase().trim()}` !== key);
                   }
                   
                   handleChange({ target: { name: 'colors', value: newColors } } as any);
                 };
 
                 const manualColors = (formData.colors || []).filter((c: any) => {
-                  const key = `${c.name.toLowerCase().trim()}-₹{c.hex.toLowerCase().trim()}`;
+                  const key = `${c.name.toLowerCase().trim()}-${c.hex.toLowerCase().trim()}`;
                   return !detectedColorsMap.has(key);
                 });
 
@@ -1000,7 +1000,7 @@ export default function ProductFormPage() {
                           {detectedColors.map((col: any, idx: number) => {
                             const checked = isColorSaved(col);
                             return (
-                              <label key={`det-₹{idx}`} className={`flex items-center gap-2 border shadow-sm px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer transition-colors ${checked ? 'bg-gray-50 border-[#03989E]' : 'bg-white border-gray-200 opacity-60'}`}>
+                              <label key={`det-${idx}`} className={`flex items-center gap-2 border shadow-sm px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer transition-colors ${checked ? 'bg-gray-50 border-[#03989E]' : 'bg-white border-gray-200 opacity-60'}`}>
                                 <input 
                                   type="checkbox" 
                                   className="rounded border-gray-300 text-[#03989E] focus:ring-[#03989E]" 
@@ -1023,11 +1023,11 @@ export default function ProductFormPage() {
                         {manualColors.length > 0 ? (
                           manualColors.map((col: any, idx: number) => {
                             // Find the original index in formData.colors to remove it correctly
-                            const originalKey = `${col.name.toLowerCase().trim()}-₹{col.hex.toLowerCase().trim()}`;
-                            const originalIdx = (formData.colors || []).findIndex((c: any) => `${c.name.toLowerCase().trim()}-₹{c.hex.toLowerCase().trim()}` === originalKey);
+                            const originalKey = `${col.name.toLowerCase().trim()}-${col.hex.toLowerCase().trim()}`;
+                            const originalIdx = (formData.colors || []).findIndex((c: any) => `${c.name.toLowerCase().trim()}-${c.hex.toLowerCase().trim()}` === originalKey);
                             
                             return (
-                              <div key={`man-₹{idx}`} className="flex items-center gap-2 bg-white border border-gray-200 shadow-sm px-3 py-1.5 rounded-full text-xs font-medium">
+                              <div key={`man-${idx}`} className="flex items-center gap-2 bg-white border border-gray-200 shadow-sm px-3 py-1.5 rounded-full text-xs font-medium">
                                 <span className="w-4 h-4 rounded-full border border-black/10 shadow-inner" style={{ backgroundColor: col.hex }}></span>
                                 <span>{col.name}</span>
                                 <button type="button" onClick={() => removeColorSwatch(originalIdx)} className="text-red-500 hover:text-red-700 ml-1" title="Remove manual color">

@@ -383,7 +383,7 @@ export const Navbar: React.FC = () => {
             {/* Account */}
             <Link
               to={user ? '/profile' : '/login'}
-              aria-label={user ? `Profile (₹{user.name})` : 'Sign In'}
+              aria-label={user ? `Profile (${user.name})` : 'Sign In'}
               title={user ? user.name : 'Sign In'}
               className="w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center overflow-hidden border border-gray-200 hover:scale-105 transition-transform duration-150"
               style={iconButtonStyle}

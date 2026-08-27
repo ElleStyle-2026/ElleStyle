@@ -41,7 +41,7 @@ export default function CustomerOrderDetailsPage() {
       queryClient.invalidateQueries({ queryKey: ['myOrders'] });
     },
     onError: (err: any) => {
-      alert(`Cancel failed: ₹{err.message || 'Unknown error'}`);
+      alert(`Cancel failed: ${err.message || 'Unknown error'}`);
     }
   });
 
@@ -102,7 +102,7 @@ export default function CustomerOrderDetailsPage() {
       if (err.code === 'PRICE_CHANGED') {
         setPriceChangeWarning(err);
       } else {
-        alert(`Retry failed: ₹{err.message || 'Unknown error'}`);
+        alert(`Retry failed: ${err.message || 'Unknown error'}`);
       }
     }
   });
@@ -132,7 +132,7 @@ export default function CustomerOrderDetailsPage() {
           </div>
           <div className="flex gap-2">
             <StatusBadge status={order.orderStatus === 'delivered' ? 'success' : order.orderStatus === 'cancelled' ? 'error' : 'warning'} label={order.orderStatus.replace('_', ' ')} />
-            <StatusBadge status={order.paymentStatus === 'paid' ? 'success' : order.paymentStatus === 'failed' ? 'error' : 'warning'} label={`Payment: ₹{order.paymentStatus.replace('_', ' ')}`} />
+            <StatusBadge status={order.paymentStatus === 'paid' ? 'success' : order.paymentStatus === 'failed' ? 'error' : 'warning'} label={`Payment: ${order.paymentStatus.replace('_', ' ')}`} />
           </div>
         </div>
 

@@ -39,7 +39,7 @@ class LiveSyncService {
     this.eventSource = new EventSource(`/api/v1/events/${this.channel}`);
 
     this.eventSource.onopen = () => {
-      console.log(`[LiveSyncService] Connected to channel: ₹{this.channel}`);
+      console.log(`[LiveSyncService] Connected to channel: ${this.channel}`);
       this.retryCount = 0;
       this.logMetric('SSE_CONNECTED', { channel: this.channel });
     };

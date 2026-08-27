@@ -63,7 +63,7 @@ export interface AdminProduct {
 
 export const adminProductService = {
   getProducts: async (): Promise<AdminProduct[]> => {
-    const res = await apiClient<{ data: AdminProduct[] }>('/api/v1/admin/products');
+    const res = await apiClient<{ data: AdminProduct[] }>('/api/v1/admin/products?limit=1000');
     return res.data;
   },
   

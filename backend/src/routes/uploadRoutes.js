@@ -4,9 +4,9 @@ const upload = require('../middleware/uploadMiddleware');
 const mediaService = require('../services/mediaService');
 
 // POST /api/upload
-// Expects multipart/form-data with 'media' field (up to 3 files)
+// Expects multipart/form-data with 'media' field (up to 10 files)
 // Also requires 'category' and 'productSlug' in req.body for folder organization
-router.post('/', upload.array('media', 3), async (req, res) => {
+router.post('/', upload.array('media', 10), async (req, res) => {
   try {
     const { category, productSlug } = req.body;
     
