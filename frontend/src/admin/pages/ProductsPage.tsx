@@ -104,7 +104,7 @@ export default function ProductsPage() {
     {
       key: 'price',
       header: 'Price',
-      render: (product) => `$${product.price}`
+      render: (product) => `₹${product.price}`
     },
     {
       key: 'stock',

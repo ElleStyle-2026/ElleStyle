@@ -43,7 +43,7 @@ export default function DashboardPage() {
 
       {/* Stat Cards */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard title="Total Revenue" value={`$${stats.totalRevenue}`} icon={<DollarSign className="h-6 w-6 text-green-600" />} />
+        <StatCard title="Total Revenue" value={`₹${stats.totalRevenue}`} icon={<DollarSign className="h-6 w-6 text-green-600" />} />
         <StatCard title="Total Orders" value={stats.totalOrders} icon={<ShoppingCart className="h-6 w-6 text-blue-600" />} />
         <StatCard title="Total Customers" value={stats.totalCustomers} icon={<Users className="h-6 w-6 text-purple-600" />} />
         <StatCard title="Total Products" value={stats.totalProducts} icon={<Package className="h-6 w-6 text-orange-600" />} />

@@ -67,14 +67,7 @@ export default function SettingsPage() {
               onChange={handleChange}
               required
             />
-            <FormInput
-              label="Currency"
-              name="currency"
-              value={formData.currency}
-              onChange={handleChange}
-              required
-              helperText="e.g. USD, EUR"
-            />
+
             <FormInput
               label="Contact Email"
               name="contactEmail"
