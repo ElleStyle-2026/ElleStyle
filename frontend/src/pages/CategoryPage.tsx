@@ -9,6 +9,7 @@ import { publicFilterService, type StorefrontFilterConfig, type FacetsData } fro
 import { useWishlist } from '../contexts/WishlistContext';
 import { useQuery } from '@tanstack/react-query';
 import { categoryKeys, subCategoryKeys, productKeys } from '@/lib/queryKeys';
+import { Star } from 'lucide-react';
 
 // Icons
 const HeartIcon = ({ isFavorite }: { isFavorite?: boolean }) => (
@@ -354,97 +355,7 @@ const CategoryPage: React.FC = () => {
               </div>
             )}
 
-            {/* Color Swatch Filter Group */}
-            {facets.colors && facets.colors.length > 0 && isFilterEnabled('color') && (
-              <div className="py-2">
-                <FilterSectionHeader
-                  title="Color Swatches"
-                  isOpen={openSections.color}
-                  onToggle={() => setOpenSections((prev) => ({ ...prev, color: !prev.color }))}
-                />
-                {openSections.color && (
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {facets.colors.map((col) => {
-                      const isSelected = activeColors.includes(col.name);
-                      return (
-                        <button
-                          key={col.name}
-                          type="button"
-                          onClick={() => toggleUrlParam('color', col.name)}
-                          className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all border ${
-                            isSelected ? 'bg-[#03989E]/15 border-[#03989E] text-gray-900 font-bold shadow-xs' : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
-                          }`}
-                          title={`${col.name} (${col.count} items)`}
-                        >
-                          <span className="w-3.5 h-3.5 rounded-full border border-black/10 shrink-0 shadow-inner" style={{ backgroundColor: col.hex }}></span>
-                          <span>{col.name}</span>
-                          <span className="text-[10px] text-gray-400 font-mono">({col.count})</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            )}
 
-            {/* Price Range Filter Group */}
-            {isFilterEnabled('price') && (
-              <div className="py-2">
-                <FilterSectionHeader
-                  title="Price Range"
-                  isOpen={openSections.price}
-                  onToggle={() => setOpenSections((prev) => ({ ...prev, price: !prev.price }))}
-                />
-                {openSections.price && (
-                  <div className="flex flex-col gap-2.5 mt-3 pl-0.5">
-                    {[
-                      { label: 'Under ₹500', value: '0-500' },
-                      { label: '₹500 - ₹1,000', value: '500-1000' },
-                      { label: '₹1,000 - ₹2,500', value: '1000-2500' },
-                      { label: '₹2,500 & Above', value: '2500-100000' },
-                    ].map((range) => {
-                      const isSelected = activePrice === range.value;
-                      return (
-                        <label key={range.value} onClick={() => setSingleFilter('price', range.value)} className="flex items-center gap-3 cursor-pointer group text-[13px] select-none text-gray-600 hover:text-gray-900">
-                          <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${isSelected ? 'border-[#03989E] bg-[#03989E]' : 'border-gray-300 group-hover:border-[#03989E]'}`}>
-                            {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                          </div>
-                          <span className={isSelected ? 'font-semibold text-gray-900' : ''}>{range.label}</span>
-                        </label>
-                      );
-                    })}
-                    <div className="pt-2 mt-2 border-t border-gray-100 flex items-center gap-2">
-                      <input
-                        type="number"
-                        placeholder="Min ₹"
-                        value={minPriceInput}
-                        onChange={(e) => setMinPriceInput(e.target.value)}
-                        className="w-1/2 h-8 px-2 border border-gray-200 rounded text-xs text-gray-700 focus:outline-none focus:border-[#03989E]"
-                      />
-                      <span className="text-gray-400">-</span>
-                      <input
-                        type="number"
-                        placeholder="Max ₹"
-                        value={maxPriceInput}
-                        onChange={(e) => setMaxPriceInput(e.target.value)}
-                        className="w-1/2 h-8 px-2 border border-gray-200 rounded text-xs text-gray-700 focus:outline-none focus:border-[#03989E]"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const min = minPriceInput || '0';
-                          const max = maxPriceInput || '100000';
-                          setSingleFilter('price', `${min}-${max}`);
-                        }}
-                        className="h-8 px-3 bg-[#1F1F1F] text-white text-[11px] rounded uppercase font-semibold hover:bg-gray-800 transition-colors shrink-0"
-                      >
-                        Go
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
 
             {/* Material Filter Group */}
             {facets.materials && facets.materials.length > 0 && isFilterEnabled('material') && (
@@ -544,9 +455,9 @@ const CategoryPage: React.FC = () => {
                 {openSections.rating && (
                   <div className="flex flex-col gap-2.5 mt-3 pl-0.5">
                     {[
-                      { label: '4★ & Above ⭐⭐⭐⭐', value: '4' },
-                      { label: '3★ & Above ⭐⭐⭐', value: '3' },
-                      { label: '2★ & Above ⭐⭐', value: '2' },
+                      { label: '4 & Above', value: '4', stars: 4 },
+                      { label: '3 & Above', value: '3', stars: 3 },
+                      { label: '2 & Above', value: '2', stars: 2 },
                     ].map((rate) => {
                       const isSelected = activeRating === rate.value;
                       return (
@@ -554,7 +465,17 @@ const CategoryPage: React.FC = () => {
                           <div className={`w-4 h-4 rounded-xs border flex items-center justify-center transition-colors ${isSelected ? 'bg-[#03989E] border-[#03989E]' : 'border-gray-300 group-hover:border-[#03989E]'}`}>
                             {isSelected && <svg width="10" height="8" viewBox="0 0 10 8" fill="none" className="text-white"><path d="M1 4L4 7L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>}
                           </div>
-                          <span className={isSelected ? 'font-semibold text-gray-900' : ''}>{rate.label}</span>
+                          <div className="flex items-center gap-1.5">
+                            <span className="flex">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`w-3.5 h-3.5 ${i < rate.stars ? 'text-amber-400 fill-amber-400' : 'text-gray-200 fill-gray-200'}`}
+                                />
+                              ))}
+                            </span>
+                            <span className={isSelected ? 'font-semibold text-gray-900' : ''}>{rate.label}</span>
+                          </div>
                         </label>
                       );
                     })}
