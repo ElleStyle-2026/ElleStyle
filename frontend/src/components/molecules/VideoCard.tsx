@@ -105,17 +105,6 @@ export const VideoCard: React.FC<VideoCardProps> = ({
     }
   };
 
-  const handlePlayPause = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const video = videoRef.current;
-    if (!video) return;
-    if (isPlaying) {
-      video.pause();
-      setIsPlaying(false);
-    } else {
-      video.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false));
-    }
-  };
 
   return (
     <div

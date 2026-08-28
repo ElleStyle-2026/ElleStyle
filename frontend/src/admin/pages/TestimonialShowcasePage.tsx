@@ -150,7 +150,7 @@ export default function TestimonialShowcasePage() {
     try {
       setIsUploading(true);
       let mediaUrl = existingMedia?.mediaUrl || '';
-      let mediaType = existingMedia?.mediaType || 'image';
+      let mediaType = (existingMedia?.mediaType as 'image' | 'video') || 'image';
 
       if (file) {
         const formData = new FormData();
@@ -164,7 +164,7 @@ export default function TestimonialShowcasePage() {
         });
         
         mediaUrl = uploadData.data[0].secure_url;
-        mediaType = uploadData.data[0].type;
+        mediaType = uploadData.data[0].resource_type === 'video' ? 'video' : 'image';
       }
 
       if (isEditing && editingId) {
@@ -329,8 +329,8 @@ export default function TestimonialShowcasePage() {
               </div>
               
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Badge Text</label>
-                <input required type="text" value={newShowcase.badgeText} onChange={e => setNewShowcase({...newShowcase, badgeText: e.target.value})} className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all" placeholder="e.g. HANDMADE EARRINGS" />
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Badge Text (Optional)</label>
+                <input type="text" value={newShowcase.badgeText} onChange={e => setNewShowcase({...newShowcase, badgeText: e.target.value})} className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-black focus:border-transparent outline-none transition-all" placeholder="e.g. HANDMADE EARRINGS" />
               </div>
               
               <div>
