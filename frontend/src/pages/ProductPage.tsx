@@ -175,27 +175,31 @@ const ProductPage: React.FC = () => {
           <div className="max-w-7xl mx-auto">
             <Typography variant="h2" className="text-center mb-16">You might also like</Typography>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-10 mb-16">
-              {relatedProducts.map((p: any) => {
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-x-3 gap-y-8 lg:gap-x-6 mb-12">
+              {relatedProducts.slice(0, 5).map((p: any, index: number) => {
                 const imgUrl = p.images?.find((img: any) => img.isFeatured)?.secure_url || p.images?.[0]?.secure_url || '';
                 return (
-                  <ProductCard
-                    key={p._id}
-                    id={p.slug}
-                    title={p.name}
-                    price={p.price}
-                    description={p.description || ''}
-                    imageSrc={imgUrl}
-                    altText={p.name}
-                    product={p}
-                  />
+                  <div key={p._id} className={index === 4 ? 'hidden lg:block' : ''}>
+                    <ProductCard
+                      id={p.slug}
+                      title={p.name}
+                      price={p.price}
+                      description={p.description || ''}
+                      imageSrc={imgUrl}
+                      altText={p.name}
+                      product={p}
+                    />
+                  </div>
                 );
               })}
             </div>
 
-            <div className="flex justify-center">
-              <button className="px-8 py-3 rounded-full border border-black/20 text-[13px] font-sans font-medium transition-colors hover:border-black/50" style={{ color: 'var(--text-primary)' }}>
-                See more
+            <div className="flex justify-center mt-4">
+              <button 
+                onClick={() => navigate(`/category/${productData.category}`)}
+                className="px-8 py-3 rounded-full bg-[#03989E] text-white text-[13px] font-sans font-semibold transition-colors hover:bg-[#027A7E]"
+              >
+                See More
               </button>
             </div>
           </div>

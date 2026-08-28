@@ -29,3 +29,11 @@ export const deleteAdminTestimonialShowcase = async (id: string): Promise<void> 
     method: 'DELETE',
   });
 };
+
+export const reorderAdminTestimonialShowcase = async (items: { _id: string; order: number }[]): Promise<void> => {
+  await apiClient('/api/v1/admin/testimonial-showcase/reorder', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ items }),
+  });
+};

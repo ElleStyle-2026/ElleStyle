@@ -7,7 +7,7 @@ import { DataTable, type Column } from '../components/shared/DataTable';
 import { ConfirmModal } from '../components/shared/ConfirmModal';
 import { adminSubCategoryService, type AdminSubCategory } from '../services/subCategoryService';
 import { adminCategoryService, type AdminCategory } from '../services/categoryService';
-import toast from 'react-hot-toast';
+import toast from '../../lib/adminToast';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { queryClient } from '@/lib/queryClient';
 import { categoryKeys, subCategoryKeys } from '@/lib/queryKeys';

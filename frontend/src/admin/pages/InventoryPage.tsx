@@ -3,6 +3,7 @@ import { PageHeader } from '../components/shared/PageHeader';
 import { DataTable, type Column } from '../components/shared/DataTable';
 import { StatusBadge } from '../components/shared/StatusBadge';
 import { adminInventoryService, type AdminInventoryItem } from '../services/inventoryService';
+import { showToast } from '../../lib/toast';
 
 export default function InventoryPage() {
   const [inventory, setInventory] = useState<AdminInventoryItem[]>([]);
@@ -38,9 +39,10 @@ export default function InventoryPage() {
       const updated = await adminInventoryService.updateStock(item._id, editStock);
       setInventory(inventory.map(i => i._id === item._id ? { ...i, stock: editStock, status: updated.status } : i));
       setEditingId(null);
+      showToast.success({ title: 'Success', message: 'Stock updated successfully.' });
     } catch (error) {
       console.error('Failed to update stock', error);
-      alert('Failed to update stock quantity');
+      showToast.error({ title: 'Error', message: 'Failed to update stock quantity.' });
     }
   };
 

@@ -7,7 +7,7 @@ import { DataTable, type Column } from '../components/shared/DataTable';
 import { ConfirmModal } from '../components/shared/ConfirmModal';
 import { adminFilterService, type AdminFilterConfiguration } from '../services/filterService';
 import { adminCategoryService, type AdminCategory } from '../services/categoryService';
-import toast from 'react-hot-toast';
+import toast from '../../lib/adminToast';
 
 export default function FiltersPage() {
   const navigate = useNavigate();

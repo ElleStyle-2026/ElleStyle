@@ -77,3 +77,25 @@ exports.deleteShowcase = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+// Reorder showcases
+exports.reorderShowcases = async (req, res) => {
+  try {
+    const items = Array.isArray(req.body.items) ? req.body.items : [];
+    if (items.length === 0) {
+      return res.status(400).json({ success: false, message: 'Items array is required' });
+    }
+
+    const updates = items.map((item, index) => {
+      if (!item || !item._id) return null;
+      return TestimonialShowcase.findByIdAndUpdate(item._id, {
+        order: index + 1,
+      });
+    }).filter(Boolean);
+
+    await Promise.all(updates);
+    res.status(200).json({ success: true, message: 'Order updated successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

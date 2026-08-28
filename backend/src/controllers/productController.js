@@ -525,7 +525,7 @@ exports.getRelatedProducts = async (req, res) => {
         .populate('category', 'name slug')
         .populate('subCategory', 'name slug icon image')
         .sort({ displayOrder: 1, createdAt: -1 })
-        .limit(4);
+        .limit(10);
     });
 
     if (!relatedProducts) {

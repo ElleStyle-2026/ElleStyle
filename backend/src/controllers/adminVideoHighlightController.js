@@ -52,10 +52,10 @@ const getCategoryOrThrow = async (categoryId) => {
 
 const uploadVideoAsset = async (file) => {
   if (!file) return null;
-  // File size validation (10MB max)
-  const MAX_SIZE = 10 * 1024 * 1024;
+  // File size validation (20MB max)
+  const MAX_SIZE = 20 * 1024 * 1024;
   if (file.size > MAX_SIZE) {
-    throw new Error('Video file size exceeds the 10MB limit.');
+    throw new Error('Video file size exceeds the 20MB limit.');
   }
 
   // File type validation
@@ -68,10 +68,10 @@ const uploadVideoAsset = async (file) => {
   const result = await mediaService.uploadVideo(file.buffer, folderPath);
   
   // Validate duration from Cloudinary result
-  if (result.duration && result.duration > 31) { // 31 to allow slight float rounding
+  if (result.duration > 120) {
     // Rollback the upload immediately
     await mediaService.deleteMedia(result.public_id, 'video');
-    throw new Error('Video duration exceeds the 30-second limit.');
+    throw new Error('Video duration exceeds the 2-minute limit.');
   }
 
   // Generate poster URL explicitly via Cloudinary transform
@@ -154,7 +154,7 @@ exports.createVideoHighlight = async (req, res) => {
   } catch (error) {
     // If validation threw error before DB create, but upload happened, cleanup happens in uploadVideoAsset if duration failed.
     // If other errors happen after upload but before DB create:
-    if (uploadedAsset && uploadedAsset.public_id && error.message !== 'Video duration exceeds the 30-second limit.') {
+    if (uploadedAsset && uploadedAsset.public_id && error.message !== 'Video duration exceeds the 2-minute limit.') {
       await mediaService.deleteMedia(uploadedAsset.public_id, 'video').catch(e => console.error(e));
     }
     res.status(400).json({ success: false, message: error.message || 'Failed to create video highlight', error: error.message });
@@ -216,7 +216,7 @@ exports.updateVideoHighlight = async (req, res) => {
     const populated = await VideoHighlight.findById(highlight._id).populate('category', 'name slug');
     res.status(200).json({ success: true, data: sanitizeHighlight(populated), message: 'Video highlight updated successfully' });
   } catch (error) {
-    if (uploadedAsset && uploadedAsset.public_id && error.message !== 'Video duration exceeds the 30-second limit.') {
+    if (uploadedAsset && uploadedAsset.public_id && error.message !== 'Video duration exceeds the 2-minute limit.') {
       await mediaService.deleteMedia(uploadedAsset.public_id, 'video').catch(e => console.error(e));
     }
     res.status(400).json({ success: false, message: error.message || 'Failed to update video highlight', error: error.message });

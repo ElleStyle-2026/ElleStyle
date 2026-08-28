@@ -6,6 +6,8 @@ import { Button } from '../components/atoms/Button';
 import { useAuth } from '../contexts/AuthContext';
 import { cartService } from '../services/cartService';
 import { useCart, type CartItem } from '../contexts/CartContext';
+import { showToast } from '../lib/toast';
+import { triggerOrderCelebration } from '../lib/celebration';
 
 type AddressValues = {
   addressLine1: string;
@@ -274,7 +276,8 @@ export default function CheckoutPage() {
               if (verifyRes.success) {
                 if (isTempSession) sessionStorage.removeItem('temp_checkout_session');
                 else clearCart();
-                alert('Order placed successfully! Order Number: ' + verifyRes.data.orderNumber);
+                showToast.orderSuccess();
+                triggerOrderCelebration();
                 navigate('/');
               } else {
                 setError(verifyRes.message || 'Payment verification failed');
@@ -328,7 +331,8 @@ export default function CheckoutPage() {
           } else {
             clearCart();
           }
-          alert('Order placed successfully! Order Number: ' + data.data.orderNumber);
+          showToast.orderSuccess();
+          triggerOrderCelebration();
           navigate('/');
         } else {
           setError(data.message || 'Failed to process order.');

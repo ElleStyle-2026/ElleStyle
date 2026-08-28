@@ -5,11 +5,14 @@ const {
   createShowcase,
   updateShowcase,
   deleteShowcase,
+  reorderShowcases,
 } = require('../controllers/testimonialShowcaseController');
 
 router.route('/')
   .get(getAllShowcases)
   .post(createShowcase);
+
+router.post('/reorder', reorderShowcases);
 
 router.route('/:id')
   .put(updateShowcase)

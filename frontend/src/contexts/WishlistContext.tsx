@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import { apiClient } from '../lib/apiClient';
+import { showToast } from '../lib/toast';
 
 export interface WishlistItem {
   id: string; // Product ID
@@ -41,7 +42,7 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       });
       if (res.success && res.data) {
         const mappedItems: WishlistItem[] = res.data.map((p: any) => ({
-          id: p._id,
+          id: p.slug, // Use slug for consistent frontend identification
           title: p.name,
           price: p.price,
           compareAtPrice: p.compareAtPrice,
@@ -71,11 +72,13 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const itemCount = items.length;
 
   const addToWishlist = async (newItem: WishlistItem) => {
+    if (items.some(i => i.id === newItem.id)) return;
+    
+    // Show toast outside of setState callback to avoid React render warnings
+    showToast.wishlistAdded(newItem.title, newItem.imageSrc);
+
     // Optimistic UI update
-    setItems((prev) => {
-      if (prev.find((i) => i.id === newItem.id)) return prev;
-      return [...prev, newItem];
-    });
+    setItems((prev) => [...prev, newItem]);
 
     if (accessToken) {
       try {
@@ -89,6 +92,7 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         });
       } catch (error) {
         console.error('Failed to add to wishlist backend', error);
+        showToast.error({ title: 'Error', message: 'Failed to add item to wishlist.' });
         // Rollback on failure
         fetchWishlist();
       }
@@ -96,6 +100,9 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const removeFromWishlist = async (id: string) => {
+    const item = items.find(i => i.id === id);
+    if (item) showToast.wishlistRemoved(item.title, item.imageSrc);
+
     // Optimistic UI update
     setItems((prev) => prev.filter((i) => i.id !== id));
 
@@ -107,6 +114,7 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         });
       } catch (error) {
         console.error('Failed to remove from wishlist backend', error);
+        showToast.error({ title: 'Error', message: 'Failed to remove item.' });
         // Rollback on failure
         fetchWishlist();
       }

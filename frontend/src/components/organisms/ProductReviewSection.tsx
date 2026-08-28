@@ -24,6 +24,7 @@ export interface ProductReviewSectionProps {
 
 import { publicProductService } from '../../services/publicProductService';
 import { env } from '../../config/env';
+import { showToast } from '../../lib/toast';
 
 export const ProductReviewSection: React.FC<ProductReviewSectionProps> = ({ productId, ratingAverage, reviewCount, reviews: initialReviews }) => {
   const { user, accessToken } = useAuth();
@@ -71,7 +72,7 @@ export const ProductReviewSection: React.FC<ProductReviewSectionProps> = ({ prod
     const selectedFiles = Array.from(e.target.files);
     
     if (files.length + selectedFiles.length > 3) {
-      alert('You can only upload up to 3 media files.');
+      showToast.error({ title: 'Upload Limit', message: 'You can only upload up to 3 media files.' });
       return;
     }
 
@@ -80,7 +81,7 @@ export const ProductReviewSection: React.FC<ProductReviewSectionProps> = ({ prod
     for (const file of selectedFiles) {
       if (file.type.startsWith('video/')) {
         if (file.size > 50 * 1024 * 1024) {
-          alert(`Video ${file.name} is too large (max 50MB).`);
+          showToast.error({ title: 'File Too Large', message: `Video ${file.name} is too large (max 50MB).` });
           continue;
         }
         
@@ -96,7 +97,7 @@ export const ProductReviewSection: React.FC<ProductReviewSectionProps> = ({ prod
         });
 
         if (duration > 60) {
-          alert(`Video ${file.name} is too long (max 1 minute).`);
+          showToast.error({ title: 'Video Too Long', message: `Video ${file.name} is too long (max 1 minute).` });
           continue;
         }
       }
@@ -155,6 +156,7 @@ export const ProductReviewSection: React.FC<ProductReviewSectionProps> = ({ prod
       
       const data = res;
       if (data.success) {
+        showToast.success({ title: 'Success', message: 'Review submitted successfully.' });
         setSubmitMessage('Review submitted successfully.');
         setComment(''); setRating(5); setFiles([]);
         
@@ -162,9 +164,11 @@ export const ProductReviewSection: React.FC<ProductReviewSectionProps> = ({ prod
         // Here we just reload or show pending message.
         setTimeout(() => { setIsWriting(false); setSubmitMessage(''); }, 3000);
       } else {
+        showToast.error({ title: 'Error', message: data.message || 'Error submitting review' });
         setSubmitMessage(data.message || 'Error submitting review');
       }
     } catch (error: any) {
+      showToast.error({ title: 'Error', message: error.message || 'Network error' });
       setSubmitMessage(error.message || 'Network error');
     } finally {
       setIsUploading(false);

@@ -57,7 +57,7 @@ export const ReviewVisualCard: React.FC<ReviewVisualCardProps> = ({
         )}
         
         {/* Top Right Badge */}
-        {badgeLabel && (
+        {badgeLabel && badgeLabel.trim() && (
           <div className="absolute top-6 right-6 z-10">
             <Badge variant="overlay">{badgeLabel}</Badge>
           </div>

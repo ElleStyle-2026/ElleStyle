@@ -9,7 +9,7 @@ import { adminCategoryService } from '../services/categoryService';
 import { adminSubCategoryService, type AdminSubCategory } from '../services/subCategoryService';
 import { apiClient } from '@/lib/apiClient';
 import { Plus, Trash2, Layers, Palette, ShieldCheck, DollarSign, Package, FileText, Globe, GitBranch, Upload, Image as ImageIcon, Loader2 } from 'lucide-react';
-import toast from 'react-hot-toast';
+import toast from '../../lib/adminToast';
 
 type TabType = 'Basic' | 'Media' | 'Pricing' | 'Inventory' | 'Variants' | 'Attributes' | 'SEO' | 'Visibility';
 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { PageHeader } from '../components/shared/PageHeader';
 import { FormInput } from '../components/shared/FormFields';
 import { adminSettingsService, type AdminSettings } from '../services/settingsService';
+import { showToast } from '../../lib/toast';
 
 export default function SettingsPage() {
   const [formData, setFormData] = useState<AdminSettings | null>(null);
@@ -41,10 +42,10 @@ export default function SettingsPage() {
     try {
       setSaving(true);
       await adminSettingsService.updateSettings(formData);
-      alert('Settings saved successfully!');
+      showToast.success({ title: 'Success', message: 'Settings saved successfully!' });
     } catch (error) {
       console.error('Failed to save settings', error);
-      alert('Failed to save settings.');
+      showToast.error({ title: 'Error', message: 'Failed to save settings.' });
     } finally {
       setSaving(false);
     }

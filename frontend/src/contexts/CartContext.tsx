@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import { cartService } from '../services/cartService';
+import { showToast } from '../lib/toast';
 
 export interface CartItem {
   id: string; // Product ID
@@ -185,9 +186,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
           { productId: newItem.id, quantity: newItem.quantity },
           accessToken
         );
-        if (res.success) formatAndSetCart(res.data);
+        if (res.success) {
+          formatAndSetCart(res.data);
+          showToast.productAdded(newItem.title, newItem.imageSrc);
+        }
       } catch (err) {
         console.error('Failed to add to cart:', err);
+        showToast.error({ title: 'Error', message: 'Failed to add item to cart.' });
       }
     } else {
       setItems((prev) => {
@@ -199,6 +204,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
         return [...prev, newItem];
       });
+      showToast.productAdded(newItem.title, newItem.imageSrc);
     }
   };
 
@@ -206,12 +212,19 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (user && accessToken) {
       try {
         const res = await cartService.removeFromCart(id, accessToken);
-        if (res.success) formatAndSetCart(res.data);
+        if (res.success) {
+          formatAndSetCart(res.data);
+          const item = items.find(i => i.id === id);
+          if (item) showToast.productRemoved(item.title, item.imageSrc);
+        }
       } catch (err) {
         console.error('Failed to remove from cart:', err);
+        showToast.error({ title: 'Error', message: 'Failed to remove item.' });
       }
     } else {
+      const item = items.find(i => i.id === id);
       setItems((prev) => prev.filter((i) => i.id !== id));
+      if (item) showToast.productRemoved(item.title, item.imageSrc);
     }
   };
 

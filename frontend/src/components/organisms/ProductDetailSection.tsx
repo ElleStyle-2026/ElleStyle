@@ -525,7 +525,7 @@ export const ProductDetailSection: React.FC<ProductDetailSectionProps> = ({ prod
 
           {/* Quantity & Buttons */}
           <div className="flex flex-col gap-6 mb-12">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <button 
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -541,18 +541,11 @@ export const ProductDetailSection: React.FC<ProductDetailSectionProps> = ({ prod
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                 </button>
               </div>
-            </div>
-            
-            <div className="flex flex-col sm:flex-row gap-4 w-full">
-              <Button onClick={handleAddToCart} variant="outline" className={`flex-1 rounded-full border ${product.availability === 'Out of Stock' ? 'border-gray-200 text-gray-400 cursor-not-allowed bg-gray-50' : 'border-black/20 hover:border-black/50'} text-primary`} disabled={product.availability === 'Out of Stock'}>
-                {product.availability === 'Out of Stock' ? 'Out of Stock' : 'Add to Cart'}
-              </Button>
-              <Button onClick={handleBuyNow} variant="primary" className={`flex-1 rounded-full text-white border-none ${product.availability === 'Out of Stock' ? 'bg-gray-400 cursor-not-allowed' : ''}`} disabled={product.availability === 'Out of Stock'}>
-                Buy Now
-              </Button>
+
+              {/* Heart Button - Desktop Only */}
               <button 
                 onClick={toggleWishlist}
-                className="w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-full border border-black/20 hover:border-black/50 transition-colors"
+                className="hidden sm:flex w-12 h-12 flex-shrink-0 items-center justify-center rounded-full border border-black/20 hover:border-black/50 transition-colors"
                 aria-label="Toggle wishlist"
                 style={{ color: inWishlist ? 'red' : 'var(--text-primary)' }}
               >
@@ -560,6 +553,28 @@ export const ProductDetailSection: React.FC<ProductDetailSectionProps> = ({ prod
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                 </svg>
               </button>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4 w-full">
+              <div className="flex gap-3 w-full sm:flex-1">
+                <Button onClick={handleAddToCart} variant="outline" className={`flex-1 rounded-full border ${product.availability === 'Out of Stock' ? 'border-gray-200 text-gray-400 cursor-not-allowed bg-gray-50' : 'border-black/20 hover:border-black/50'} text-primary`} disabled={product.availability === 'Out of Stock'}>
+                  {product.availability === 'Out of Stock' ? 'Out of Stock' : 'Add to Cart'}
+                </Button>
+                {/* Heart Button - Mobile Only */}
+                <button 
+                  onClick={toggleWishlist}
+                  className="sm:hidden w-12 h-12 flex-shrink-0 flex items-center justify-center rounded-full border border-black/20 hover:border-black/50 transition-colors"
+                  aria-label="Toggle wishlist"
+                  style={{ color: inWishlist ? 'red' : 'var(--text-primary)' }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill={inWishlist ? "red" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                </button>
+              </div>
+              <Button onClick={handleBuyNow} variant="primary" className={`w-full sm:flex-1 rounded-full text-white border-none ${product.availability === 'Out of Stock' ? 'bg-gray-400 cursor-not-allowed' : ''}`} disabled={product.availability === 'Out of Stock'}>
+                Buy Now
+              </Button>
             </div>
           </div>
 

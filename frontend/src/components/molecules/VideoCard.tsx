@@ -26,6 +26,16 @@ export const VideoCard: React.FC<VideoCardProps> = ({
   const [shouldLoad, setShouldLoad] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleCardClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsModalOpen(false);
+  };
 
   // Sync external forceMute
   useEffect(() => {
@@ -112,7 +122,7 @@ export const VideoCard: React.FC<VideoCardProps> = ({
       ref={containerRef}
       className={`relative group overflow-hidden rounded-[14px] cursor-pointer snap-start shrink-0 ${className}`}
       style={{ aspectRatio: '9/16' }}
-      onClick={handlePlayPause}
+      onClick={handleCardClick}
     >
       {shouldLoad ? (
         <video
@@ -135,11 +145,13 @@ export const VideoCard: React.FC<VideoCardProps> = ({
       )}
 
       {/* Category Pill */}
-      <div className="absolute top-2 left-2 z-10">
-        <span className="bg-[var(--accent)] text-white rounded-full px-2 py-1 text-[10px] sm:text-[11px] uppercase tracking-wide font-medium shadow-sm">
-          {category}
-        </span>
-      </div>
+      {category && category.trim() && (
+        <div className="absolute top-2 left-2 z-10">
+          <span className="bg-[var(--accent)] text-white rounded-full px-2 py-1 text-[10px] sm:text-[11px] uppercase tracking-wide font-medium shadow-sm">
+            {category}
+          </span>
+        </div>
+      )}
 
       {/* Center Play Icon (visible when paused) */}
       {!isPlaying && (
@@ -179,6 +191,40 @@ export const VideoCard: React.FC<VideoCardProps> = ({
             <Volume2 className="w-4 h-4 text-white" />
           )}
         </button>
+      )}
+
+
+      {/* Video Modal Popup */}
+      {isModalOpen && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 transition-opacity duration-300"
+          onClick={closeModal}
+        >
+          <div 
+            className="relative w-full max-w-4xl max-h-[90vh] rounded-xl overflow-hidden bg-black flex flex-col justify-center items-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button 
+              onClick={closeModal}
+              className="absolute top-4 right-4 z-50 w-10 h-10 bg-white/20 hover:bg-white/40 rounded-full flex justify-center items-center text-white transition-colors cursor-pointer"
+              aria-label="Close modal"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+
+            <video
+              src={videoSrc}
+              className="w-full max-h-[85vh] object-contain"
+              autoPlay
+              controls
+              playsInline
+            />
+          </div>
+        </div>
       )}
     </div>
   );

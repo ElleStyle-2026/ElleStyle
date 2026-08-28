@@ -5,7 +5,7 @@ import { PageHeader } from '../components/shared/PageHeader';
 import { FormInput } from '../components/shared/FormFields';
 import { adminFilterService, type AdminFilterConfiguration } from '../services/filterService';
 import { adminCategoryService, type AdminCategory } from '../services/categoryService';
-import toast from 'react-hot-toast';
+import toast from '../../lib/adminToast';
 
 export default function FilterFormPage() {
   const { id } = useParams();

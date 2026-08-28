@@ -52,7 +52,7 @@ export const CartItemList: React.FC<CartItemListProps> = ({ items, onRemove, onU
                     {item.size && <span>{item.size}</span>}
                   </div>
 
-                  <div className="mt-3 flex items-center justify-between gap-4">
+                  <div className="mt-3 flex flex-wrap items-center justify-between gap-x-2 gap-y-3">
                     <div className="flex items-center gap-3 rounded-full border border-black/10 px-3 py-1.5">
                       <button
                         onClick={() => onUpdateQuantity(item.id, Math.max(1, item.quantity - 1))}
@@ -78,13 +78,13 @@ export const CartItemList: React.FC<CartItemListProps> = ({ items, onRemove, onU
                       </button>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 ml-auto">
                       <span className="font-sans text-[13px] font-medium text-charcoal">
                         {formatPrice(rowTotal)}
                       </span>
                       <button
                         onClick={() => onRemove(item.id)}
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 text-black/45 transition-colors hover:border-black/20 hover:text-black"
+                        className="inline-flex shrink-0 h-8 w-8 items-center justify-center rounded-full border border-black/10 text-black/45 transition-colors hover:border-black/20 hover:text-black"
                         aria-label="Remove item"
                       >
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">

@@ -58,15 +58,28 @@ export const VideoHighlightFormModal: React.FC<VideoHighlightFormModalProps> = (
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 10 * 1024 * 1024) {
-      alert('Video file size exceeds the 10MB limit.');
+    if (file.size > 20 * 1024 * 1024) {
+      alert('Video file size exceeds the 20MB limit.');
       e.target.value = '';
       return;
     }
     
-    setVideoFile(file);
     const url = URL.createObjectURL(file);
-    setPreviewUrl(url);
+    
+    // Check duration
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+    video.onloadedmetadata = () => {
+      window.URL.revokeObjectURL(video.src);
+      if (video.duration > 120) {
+        alert('Video playtime exceeds the 2 minute limit.');
+        e.target.value = '';
+        return;
+      }
+      setVideoFile(file);
+      setPreviewUrl(url);
+    };
+    video.src = url;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -192,7 +205,7 @@ export const VideoHighlightFormModal: React.FC<VideoHighlightFormModalProps> = (
                       />
                     </label>
                   </div>
-                  <p className="text-xs leading-5 text-gray-500 mt-1">MP4, WebM up to 10MB (max 30 sec)</p>
+                  <p className="text-xs leading-5 text-gray-500 mt-1">MP4, WebM up to 20MB (max 2 min)</p>
                 </div>
               </div>
             </div>

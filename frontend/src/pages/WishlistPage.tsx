@@ -3,6 +3,7 @@ import { useWishlist } from '../contexts/WishlistContext';
 import { useCart } from '../contexts/CartContext';
 import { Typography } from '../components/atoms/Typography';
 import { Button } from '../components/atoms/Button';
+import { showToast } from '../lib/toast';
 
 const WishlistPage: React.FC = () => {
   const { items, removeFromWishlist, clearWishlist } = useWishlist();
@@ -34,12 +35,12 @@ const WishlistPage: React.FC = () => {
         quantity: 1,
       });
     });
-    alert('All items added to cart!');
+    showToast.success({ title: 'Success', message: 'All items added to cart!' });
   };
 
   const copyLink = () => {
     navigator.clipboard.writeText(wishlistLink);
-    alert('Wishlist link copied!');
+    showToast.success({ title: 'Copied', message: 'Wishlist link copied!' });
   };
 
   return (

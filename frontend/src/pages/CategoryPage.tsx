@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { apiClient } from '@/lib/apiClient';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { fetchPublicCategories, type Category } from '../services/publicCategoryService';
 import { publicProductService, type PublicProduct } from '../services/publicProductService';
@@ -62,6 +62,20 @@ const CategoryPage: React.FC = () => {
     discount: true,
     rating: true,
   });
+
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
+  // Lock body scroll when mobile filter is open
+  useEffect(() => {
+    if (isMobileFilterOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileFilterOpen]);
 
   // URL parameters as Single Source of Truth
   const activeSubCategories = useMemo(() => {
@@ -208,102 +222,10 @@ const CategoryPage: React.FC = () => {
     ? subCategories.find((sc) => sc.slug === activeSubCategories[0] || sc.name === activeSubCategories[0]) 
     : null;
 
-  return (
-    <div className="min-h-screen pb-20 transition-colors duration-500 font-sans" style={{ backgroundColor: 'var(--bg-page, #FAF8F5)' }}>
-      {/* 1. Hero Banner Section (Moved up below header without breadcrumbs!) */}
-      <div className="relative w-full h-[300px] md:h-[380px] mt-[76px] md:mt-[84px] flex flex-col items-center justify-center overflow-hidden bg-[#EFECE6]">
-        {selectedSubCatObj && selectedSubCatObj.bannerImage ? (
-          <img src={selectedSubCatObj.bannerImage} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700" alt={selectedSubCatObj.name} />
-        ) : category.bannerImage ? (
-          <img src={category.bannerImage} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700" alt={category.name} />
-        ) : null}
-        <div className="absolute inset-0 bg-black/25 backdrop-blur-[1px]" />
 
-        <div className="relative z-10 text-center px-6 flex flex-col items-center max-w-3xl">
-          <h1 className="text-3xl md:text-5xl font-serif text-white uppercase tracking-widest font-normal drop-shadow-md">
-            {selectedSubCatObj ? selectedSubCatObj.name : category.name}
-          </h1>
-          
-          <DividerDecorative />
-
-          <p className="text-[14px] md:text-[16px] text-white/95 leading-relaxed max-w-2xl font-light drop-shadow">
-            {selectedSubCatObj && selectedSubCatObj.description
-              ? selectedSubCatObj.description
-              : category.description || 'Timeless designs, meticulously handmade to add elegance and charm to your sanctuary.'}
-          </p>
-        </div>
-      </div>
-
-      {/* 2. Top Circular SubCategory Carousel (Synchronized with URL State & Sidebar!) */}
-      {subCategories.length > 0 && (
-        <div className="w-full bg-white/70 border-y border-gray-200/70 py-6 shadow-sm overflow-hidden">
-          <div className="max-w-[1400px] mx-auto px-6 overflow-x-auto scrollbar-hide">
-            <div className="flex items-start justify-start md:justify-center gap-8 min-w-max mx-auto px-4 pt-3 pb-3">
-              {/* All Collection Circle */}
-              <button
-                onClick={() => setSingleUrlParam('subcategory', 'ALL')}
-                className="flex flex-col items-center gap-2 group shrink-0 w-24 md:w-28 cursor-pointer focus:outline-none"
-              >
-                <div className={`w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden shadow-sm transition-all duration-300 flex items-center justify-center bg-gray-100 ring-2 ring-offset-4 ring-offset-[#FAF8F5] shrink-0 ${
-                  activeSubCategories.length === 0 ? 'ring-[#03989E] bg-[#FAF8F5]' : 'ring-transparent group-hover:ring-gray-300'
-                }`}>
-                  <span className={`text-[13px] md:text-[15px] font-serif uppercase tracking-widest font-semibold ${activeSubCategories.length === 0 ? 'text-[#03989E]' : 'text-gray-700'}`}>
-                    All
-                  </span>
-                </div>
-                <div className="flex flex-col items-center text-center leading-tight mt-1">
-                  <span className={`text-[13px] font-medium line-clamp-1 transition-colors ${activeSubCategories.length === 0 ? 'text-[#03989E] font-semibold' : 'text-gray-800'}`}>
-                    All {category.name}
-                  </span>
-                  <span className="text-[11px] text-gray-400 font-mono mt-0.5">({totalProducts})</span>
-                </div>
-              </button>
-
-              <div className="h-20 w-[1px] bg-gray-200 mx-1 shrink-0 self-center" />
-
-              {/* SubCategory Relational Circles */}
-              {subCategories.map((sub) => {
-                const isActive = activeSubCategories.includes(sub.slug) || activeSubCategories.includes(sub.name);
-                const circleImg = sub.image || sub.icon || category.image || 'https://images.unsplash.com/photo-1584992236310-6edddc085ffb?w=200';
-                const count = sub.productCount !== undefined ? sub.productCount : 0;
-
-                return (
-                  <button
-                    key={sub._id}
-                    onClick={() => setSingleUrlParam('subcategory', sub.slug)}
-                    className="flex flex-col items-center gap-2 group shrink-0 w-24 md:w-28 cursor-pointer focus:outline-none"
-                  >
-                    <div className={`w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden shadow-sm transition-all duration-300 relative shrink-0 ring-2 ring-offset-4 ring-offset-[#FAF8F5] ${
-                      isActive ? 'ring-[#03989E] shadow-md' : 'ring-transparent group-hover:ring-[#03989E]/50'
-                    }`}>
-                      <img
-                        src={circleImg}
-                        alt={sub.name}
-                        className={`w-full h-full object-cover transition-transform duration-700 ${isActive ? 'scale-110' : 'group-hover:scale-105'}`}
-                      />
-                      {isActive && <div className="absolute inset-0 bg-[#03989E]/15 pointer-events-none" />}
-                    </div>
-                    <div className="flex flex-col items-center text-center leading-tight mt-1">
-                      <span className={`text-[13px] font-medium line-clamp-1 transition-colors ${isActive ? 'text-[#03989E] font-bold' : 'text-gray-800'}`}>
-                        {sub.name}
-                      </span>
-                      <span className="text-[11px] text-gray-400 font-mono mt-0.5">({count})</span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 4. Main Catalog Content & Sidebar Filtering Layout */}
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12 mt-12 flex flex-col lg:flex-row gap-12">
-        
-        {/* Left Sidebar (Server-Side Filter Controls & Live Aggregations) */}
-        <aside className="w-full lg:w-1/4 xl:w-1/5 shrink-0">
-          <div className="sticky top-28 bg-white p-6 rounded-lg border border-gray-200/80 shadow-xs space-y-2">
-            <div className="flex items-center justify-between pb-4 border-b border-gray-200">
+  const renderFilterSidebar = () => (
+    <>
+      <div className="flex items-center justify-between pb-4 border-b border-gray-200">
               <span className="text-[12px] font-bold tracking-[0.15em] uppercase text-gray-900">Filter By</span>
               {activeFilterCount > 0 && (
                 <button
@@ -488,11 +410,163 @@ const CategoryPage: React.FC = () => {
               <span>Server-Side Dynamic Filtering</span>
               <span className="font-mono bg-gray-100 px-1.5 py-0.5 rounded">v2</span>
             </div>
+    </>
+  );
+  return (
+    <div className="min-h-screen pb-20 transition-colors duration-500 font-sans" style={{ backgroundColor: 'var(--bg-page, #FAF8F5)' }}>
+      {/* 1. Hero Banner Section (Moved up below header without breadcrumbs!) */}
+      <div className="relative w-full h-[300px] md:h-[380px] mt-[76px] md:mt-[84px] flex flex-col items-center justify-center overflow-hidden bg-[#EFECE6]">
+        {selectedSubCatObj && selectedSubCatObj.bannerImage ? (
+          <img src={selectedSubCatObj.bannerImage} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700" alt={selectedSubCatObj.name} />
+        ) : category.bannerImage ? (
+          <img src={category.bannerImage} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700" alt={category.name} />
+        ) : null}
+        <div className="absolute inset-0 bg-black/25 backdrop-blur-[1px]" />
+
+        <div className="relative z-10 text-center px-6 flex flex-col items-center max-w-3xl">
+          <h1 className="text-3xl md:text-5xl font-serif text-white uppercase tracking-widest font-normal drop-shadow-md">
+            {selectedSubCatObj ? selectedSubCatObj.name : category.name}
+          </h1>
+          
+          <DividerDecorative />
+
+          <p className="text-[14px] md:text-[16px] text-white/95 leading-relaxed max-w-2xl font-light drop-shadow">
+            {selectedSubCatObj && selectedSubCatObj.description
+              ? selectedSubCatObj.description
+              : category.description || 'Timeless designs, meticulously handmade to add elegance and charm to your sanctuary.'}
+          </p>
+        </div>
+      </div>
+
+      {/* 2. Top Circular SubCategory Carousel (Synchronized with URL State & Sidebar!) */}
+      {subCategories.length > 0 && (
+        <div className="w-full bg-white/70 border-y border-gray-200/70 py-6 shadow-sm overflow-hidden">
+          <div className="max-w-[1400px] mx-auto px-6 overflow-x-auto scrollbar-hide">
+            <div className="flex items-start justify-start md:justify-center gap-8 min-w-max mx-auto px-4 pt-3 pb-3">
+              {/* All Collection Circle */}
+              <button
+                onClick={() => setSingleUrlParam('subcategory', 'ALL')}
+                className="flex flex-col items-center gap-2 group shrink-0 w-24 md:w-28 cursor-pointer focus:outline-none"
+              >
+                <div className={`w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden shadow-sm transition-all duration-300 flex items-center justify-center bg-gray-100 ring-2 ring-offset-4 ring-offset-[#FAF8F5] shrink-0 ${
+                  activeSubCategories.length === 0 ? 'ring-[#03989E] bg-[#FAF8F5]' : 'ring-transparent group-hover:ring-gray-300'
+                }`}>
+                  <span className={`text-[13px] md:text-[15px] font-serif uppercase tracking-widest font-semibold ${activeSubCategories.length === 0 ? 'text-[#03989E]' : 'text-gray-700'}`}>
+                    All
+                  </span>
+                </div>
+                <div className="flex flex-col items-center text-center leading-tight mt-1">
+                  <span className={`text-[13px] font-medium line-clamp-1 transition-colors ${activeSubCategories.length === 0 ? 'text-[#03989E] font-semibold' : 'text-gray-800'}`}>
+                    All {category.name}
+                  </span>
+                  <span className="text-[11px] text-gray-400 font-mono mt-0.5">({totalProducts})</span>
+                </div>
+              </button>
+
+              <div className="h-20 w-[1px] bg-gray-200 mx-1 shrink-0 self-center" />
+
+              {/* SubCategory Relational Circles */}
+              {subCategories.map((sub) => {
+                const isActive = activeSubCategories.includes(sub.slug) || activeSubCategories.includes(sub.name);
+                const circleImg = sub.image || sub.icon || category.image || 'https://images.unsplash.com/photo-1584992236310-6edddc085ffb?w=200';
+                const count = sub.productCount !== undefined ? sub.productCount : 0;
+
+                return (
+                  <button
+                    key={sub._id}
+                    onClick={() => setSingleUrlParam('subcategory', sub.slug)}
+                    className="flex flex-col items-center gap-2 group shrink-0 w-24 md:w-28 cursor-pointer focus:outline-none"
+                  >
+                    <div className={`w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden shadow-sm transition-all duration-300 relative shrink-0 ring-2 ring-offset-4 ring-offset-[#FAF8F5] ${
+                      isActive ? 'ring-[#03989E] shadow-md' : 'ring-transparent group-hover:ring-[#03989E]/50'
+                    }`}>
+                      <img
+                        src={circleImg}
+                        alt={sub.name}
+                        className={`w-full h-full object-cover transition-transform duration-700 ${isActive ? 'scale-110' : 'group-hover:scale-105'}`}
+                      />
+                      {isActive && <div className="absolute inset-0 bg-[#03989E]/15 pointer-events-none" />}
+                    </div>
+                    <div className="flex flex-col items-center text-center leading-tight mt-1">
+                      <span className={`text-[13px] font-medium line-clamp-1 transition-colors ${isActive ? 'text-[#03989E] font-bold' : 'text-gray-800'}`}>
+                        {sub.name}
+                      </span>
+                      <span className="text-[11px] text-gray-400 font-mono mt-0.5">({count})</span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 4. Main Catalog Content & Sidebar Filtering Layout */}
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 mt-12 flex flex-col lg:flex-row gap-12">
+        
+        {/* Left Sidebar (Server-Side Filter Controls & Live Aggregations) */}
+        {/* Left Sidebar (Desktop Server-Side Filter Controls) */}
+        <aside className="hidden lg:block w-1/4 xl:w-1/5 shrink-0">
+          <div className="sticky top-28 bg-white p-6 rounded-lg border border-gray-200/80 shadow-xs space-y-2">
+            {renderFilterSidebar()}
           </div>
         </aside>
 
+        {/* Mobile Filter Drawer Overlay */}
+        <div
+          className={`fixed inset-0 z-[100] lg:hidden transition-opacity duration-300 ${
+            isMobileFilterOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+          }`}
+        >
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/30 backdrop-blur-[2px]"
+            onClick={() => setIsMobileFilterOpen(false)}
+            aria-hidden="true"
+          />
+
+          {/* Drawer Panel */}
+          <div
+            className={`absolute top-0 left-0 bottom-0 w-[85%] max-w-sm bg-white shadow-xl flex flex-col transition-transform duration-300 ease-out ${
+              isMobileFilterOpen ? 'translate-x-0' : '-translate-x-full'
+            }`}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Filter Products"
+          >
+            {/* Drawer Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+              <span className="text-[14px] font-bold tracking-[0.1em] uppercase text-gray-900">Filters</span>
+              <button
+                onClick={() => setIsMobileFilterOpen(false)}
+                className="p-2 -mr-2 text-gray-400 hover:text-gray-900 transition-colors"
+                aria-label="Close filters"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+            </div>
+
+            {/* Drawer Content */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-2">
+              {renderFilterSidebar()}
+            </div>
+          </div>
+        </div>
+
         {/* Right Main Content (Product Catalog Grid) */}
         <div className="flex-1">
+          {/* Mobile Filter Button */}
+          <div className="lg:hidden mb-6">
+            <button
+              onClick={() => setIsMobileFilterOpen(true)}
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 border border-gray-300 rounded-md bg-white text-[13px] font-bold tracking-widest uppercase text-gray-800 shadow-sm transition-colors hover:bg-gray-50"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+              Filter {activeFilterCount > 0 ? `· ${activeFilterCount}` : ''}
+            </button>
+          </div>
           {/* Top Control Bar */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-6 mb-8 border-b border-gray-200/60 text-[13px]">
             <div className="text-gray-700 font-medium mb-2 sm:mb-0">
@@ -570,7 +644,7 @@ const CategoryPage: React.FC = () => {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-10">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-3 gap-y-8 lg:gap-x-6 lg:gap-y-10">
               {products.map((product) => {
                 const imageSrc = product.images?.[0]?.secure_url || 'https://images.unsplash.com/photo-1584992236310-6edddc085ffb?w=500';
 

@@ -39,18 +39,24 @@ exports.addToWishlist = async (req, res) => {
   try {
     const { productId } = req.body;
     
-    const product = await Product.findById(productId);
+    let product;
+    if (productId.match(/^[0-9a-fA-F]{24}$/)) {
+      product = await Product.findById(productId);
+    } else {
+      product = await Product.findOne({ slug: productId });
+    }
+
     if (!product || product.isDeleted || product.isActive === false) {
       return res.status(404).json({ success: false, message: 'Product not found or unavailable' });
     }
 
     const user = await User.findById(req.user._id);
     
-    if (user.wishlist.some(id => id.toString() === productId)) {
+    if (user.wishlist.some(id => id.toString() === product._id.toString())) {
       return res.status(400).json({ success: false, message: 'Product already in wishlist' });
     }
 
-    user.wishlist.push(productId);
+    user.wishlist.push(product._id);
     await user.save();
 
     res.status(200).json({
@@ -69,9 +75,20 @@ exports.removeFromWishlist = async (req, res) => {
   try {
     const { productId } = req.params;
     
+    let product;
+    if (productId.match(/^[0-9a-fA-F]{24}$/)) {
+      product = await Product.findById(productId);
+    } else {
+      product = await Product.findOne({ slug: productId });
+    }
+
+    if (!product) {
+      return res.status(404).json({ success: false, message: 'Product not found' });
+    }
+
     const user = await User.findById(req.user._id);
     
-    user.wishlist = user.wishlist.filter(id => id.toString() !== productId);
+    user.wishlist = user.wishlist.filter(id => id.toString() !== product._id.toString());
     await user.save();
 
     res.status(200).json({

@@ -6,6 +6,7 @@ import { customerOrderService } from '../services/customerOrderService';
 import { StatusBadge } from '../admin/components/shared/StatusBadge';
 import { useAuth } from '../contexts/AuthContext';
 import { useLiveSync } from '../hooks/useLiveSync';
+import { showToast } from '../lib/toast';
 
 // Use a global razorpay type to avoid TS errors or install @types/razorpay
 declare global {
@@ -41,7 +42,7 @@ export default function CustomerOrderDetailsPage() {
       queryClient.invalidateQueries({ queryKey: ['myOrders'] });
     },
     onError: (err: any) => {
-      alert(`Cancel failed: ${err.message || 'Unknown error'}`);
+      showToast.error({ title: 'Cancel Failed', message: err.message || 'Unknown error' });
     }
   });
 
@@ -73,9 +74,9 @@ export default function CustomerOrderDetailsPage() {
             if (verifyData.success) {
               queryClient.invalidateQueries({ queryKey: ['customerOrder', id] });
               queryClient.invalidateQueries({ queryKey: ['myOrders'] });
-              alert('Payment successful!');
+              showToast.success({ title: 'Success', message: 'Payment successful!' });
             } else {
-              alert('Payment verification failed');
+              showToast.error({ title: 'Verification Failed', message: 'Payment verification failed' });
             }
           } catch (err) {
             console.error('Verify error', err);
@@ -93,7 +94,7 @@ export default function CustomerOrderDetailsPage() {
       
       const rzp = new window.Razorpay(options);
       rzp.on('payment.failed', function (response: any) {
-        alert(response.error.description);
+        showToast.error({ title: 'Payment Failed', message: response.error.description });
         queryClient.invalidateQueries({ queryKey: ['customerOrder', id] });
       });
       rzp.open();
@@ -102,7 +103,7 @@ export default function CustomerOrderDetailsPage() {
       if (err.code === 'PRICE_CHANGED') {
         setPriceChangeWarning(err);
       } else {
-        alert(`Retry failed: ${err.message || 'Unknown error'}`);
+        showToast.error({ title: 'Retry Failed', message: err.message || 'Unknown error' });
       }
     }
   });

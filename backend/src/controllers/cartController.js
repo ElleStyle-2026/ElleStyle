@@ -180,7 +180,7 @@ exports.updateCartItem = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Cart not found' });
     }
 
-    const itemIndex = cart.items.findIndex(item => String(item._id) === cartItemId);
+    const itemIndex = cart.items.findIndex(item => String(item.product._id || item.product) === cartItemId);
 
     if (itemIndex > -1) {
       if (quantity <= 0) {
@@ -234,7 +234,7 @@ exports.removeFromCart = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Cart not found' });
     }
 
-    cart.items = cart.items.filter(item => String(item._id) !== cartItemId);
+    cart.items = cart.items.filter(item => String(item.product._id || item.product) !== cartItemId);
     await cart.save();
 
     cart = await Cart.findOne({ user: req.user._id }).populate({

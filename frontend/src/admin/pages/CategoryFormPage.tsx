@@ -7,7 +7,7 @@ import { ImageUpload, type ImageMetadata } from '../components/shared/ImageUploa
 import { adminCategoryService, type AdminCategory } from '../services/categoryService';
 import { adminSubCategoryService, type AdminSubCategory } from '../services/subCategoryService';
 import { Plus, Layers, ExternalLink } from 'lucide-react';
-import toast from 'react-hot-toast';
+import toast from '../../lib/adminToast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { categoryKeys, subCategoryKeys } from '@/lib/queryKeys';
 import { apiClient } from '@/lib/apiClient';
