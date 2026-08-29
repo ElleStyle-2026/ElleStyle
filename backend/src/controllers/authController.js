@@ -2,10 +2,11 @@ const authService = require('../services/authService');
 const mediaService = require('../services/mediaService');
 
 const setTokenCookie = (res, token) => {
+  const isProd = process.env.NODE_ENV === 'production';
   res.cookie('refreshToken', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'strict',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 };
@@ -210,9 +211,12 @@ exports.logout = async (req, res, next) => {
     if (refreshToken) {
       await authService.logout(refreshToken);
     }
+    const isProd = process.env.NODE_ENV === 'production';
     res.cookie('refreshToken', 'none', {
       expires: new Date(Date.now() + 10 * 1000),
       httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'strict',
     });
     res.status(200).json({ success: true, message: 'Logged out successfully' });
   } catch (error) {
