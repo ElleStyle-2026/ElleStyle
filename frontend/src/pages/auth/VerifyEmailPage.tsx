@@ -4,7 +4,7 @@ import { authService } from '../../services/authService';
 import { useAuth } from '../../contexts/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Loader, PartyPopper, AlertCircle } from 'lucide-react';
-import { cn } from '../../lib/utils';
+
 
 export default function VerifyEmailPage() {
   const [searchParams] = useSearchParams();

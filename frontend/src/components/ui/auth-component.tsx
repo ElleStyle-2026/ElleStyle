@@ -1,7 +1,7 @@
 import { cn } from "../../lib/utils";
-import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle, useMemo, useCallback, createContext, Children } from "react";
+import React, { useState, useRef, useEffect, forwardRef, useImperativeHandle, useMemo, useCallback, Children } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { ArrowRight, Mail, Gem, Lock, Eye, EyeOff, ArrowLeft, X, AlertCircle, PartyPopper, Loader, User } from "lucide-react";
+import { ArrowRight, Mail, Lock, Eye, EyeOff, ArrowLeft, X, AlertCircle, PartyPopper, Loader, User } from "lucide-react";
 import { AnimatePresence, motion, useInView, type Variants, type Transition } from "framer-motion";
 import type { GlobalOptions as ConfettiGlobalOptions, CreateTypes as ConfettiInstance, Options as ConfettiOptions } from "canvas-confetti";
 import confetti from "canvas-confetti";
@@ -131,13 +131,12 @@ const DefaultLogo = () => (<img src="https://res.cloudinary.com/gc1qeznc/image/u
 interface AuthComponentProps {
     mode: 'login' | 'signup';
     logo?: React.ReactNode;
-    brandName?: string;
     onAuthSubmit: (data: any) => Promise<{ success: boolean; message?: string;[key: string]: any }>;
     onGoogleSuccess: (credentialResponse: any) => void;
     onSuccessRedirect: (status?: string, email?: string) => void;
 }
 
-export const AuthComponent = ({ mode, logo = <DefaultLogo />, brandName = "ElleStyle", onAuthSubmit, onGoogleSuccess, onSuccessRedirect }: AuthComponentProps) => {
+export const AuthComponent = ({ mode, logo = <DefaultLogo />, onAuthSubmit, onGoogleSuccess, onSuccessRedirect }: AuthComponentProps) => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
