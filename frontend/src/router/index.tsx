@@ -28,6 +28,7 @@ import SignupPage from '@/pages/auth/SignupPage';
 import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage';
 import ResetPasswordPage from '@/pages/auth/ResetPasswordPage';
 import VerifyEmailPage from '@/pages/auth/VerifyEmailPage';
+import CheckEmailPage from '@/pages/auth/CheckEmailPage';
 import CustomerOrdersPage from '@/pages/OrdersPage';
 import CustomerOrderDetailsPage from '@/pages/CustomerOrderDetailsPage';
 
@@ -145,6 +146,10 @@ export const router = createBrowserRouter([
       {
         path: 'verify-email',
         element: <VerifyEmailPage />,
+      },
+      {
+        path: 'check-email',
+        element: <CheckEmailPage />,
       },
       {
         path: 'search',

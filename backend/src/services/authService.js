@@ -255,12 +255,12 @@ class AuthService {
     user.password = await this.hashPassword(newPassword);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
-    
+
     // Resetting password proves email ownership, so we can verify the email
     if (!user.isEmailVerified) {
       user.isEmailVerified = true;
     }
-    
+
     await user.save();
     return true;
   }
@@ -270,7 +270,7 @@ class AuthService {
     if (!rToken) {
       throw new Error('Invalid refresh token');
     }
-    
+
     if (rToken.expiresAt < new Date()) {
       await RefreshToken.deleteOne({ _id: rToken._id });
       throw new Error('Refresh token expired');

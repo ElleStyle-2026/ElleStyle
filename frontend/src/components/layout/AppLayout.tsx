@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 
 export default function AppLayout() {
   const location = useLocation();
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/verify-email';
 
   // Ensure data-category is cleared when navigating to non-category pages
   // (CategoryPage's ThemeProvider handles setting it for category routes,
@@ -17,13 +18,13 @@ export default function AppLayout() {
 
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: 'var(--bg-page)' }}>
-      <Navbar />
+      {!isAuthPage && <Navbar />}
 
       <main className="flex-1">
         <Outlet />
       </main>
 
-      <Footer />
+      {!isAuthPage && <Footer />}
     </div>
   );
 }
