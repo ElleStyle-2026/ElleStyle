@@ -26,7 +26,7 @@ const CartPage: React.FC = () => {
   };
 
   const handleContinueShopping = () => {
-    navigate('/');
+    navigate('/categories');
   };
 
   return (

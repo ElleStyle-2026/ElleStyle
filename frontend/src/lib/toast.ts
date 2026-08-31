@@ -20,7 +20,6 @@ const createToast = (type: ToastType, payload: Omit<ToastPayload, 'type'>) => {
 
   const options: any = {
     duration: payload.duration || (type === 'error' ? 5000 : type === 'loading' ? Infinity : 3000),
-    position: 'top-center',
     id: payload.id, // Explicit ID for deduplication and updating loading toasts
   };
 

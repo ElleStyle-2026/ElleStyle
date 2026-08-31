@@ -670,7 +670,7 @@ const CategoryPage: React.FC = () => {
 
                       {/* Wishlist Heart Overlay */}
                       <button
-                        className="absolute top-3 right-3 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-white/90 backdrop-blur-xs shadow-sm hover:bg-white transition-colors text-gray-700 hover:text-red-500"
+                        className={`absolute top-3 right-3 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-white/90 backdrop-blur-xs shadow-sm transition-colors hover:bg-white ${isInWishlist(product.slug) ? 'text-red-500' : 'text-gray-700 hover:text-red-500'}`}
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
