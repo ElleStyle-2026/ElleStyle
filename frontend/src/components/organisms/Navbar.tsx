@@ -177,13 +177,16 @@ export const Navbar: React.FC = () => {
           className={cn('pointer-events-auto flex items-center justify-between rounded-full border border-gray-100 backdrop-blur-md sm:px-6 md:h-[66px] md:px-8')}
         >
           {/* Logo */}
-          <Link to="/" className="flex items-center flex-shrink-0" aria-label="ElleStyle — Home">
+          <Link to="/" className="flex items-center gap-2 flex-shrink-0 md:gap-3" aria-label="ElleStyle — Home">
             <img
               src={LOGO_URL}
               alt="ElleStyle logo"
               className="h-10 md:h-[46px] w-auto object-contain rounded-md"
               loading="eager"
             />
+            <span className="font-fraunces text-[15px] font-medium tracking-[0.02em] text-[#03989E] sm:text-[17px] md:text-[19px]">
+              ElleStyle
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
