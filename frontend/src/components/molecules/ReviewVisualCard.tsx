@@ -15,7 +15,7 @@ export const ReviewVisualCard: React.FC<ReviewVisualCardProps> = ({
   mediaType,
   badgeLabel,
   userName,
-  userAvatar,
+  userAvatar: _userAvatar,
   className = '',
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -65,10 +65,7 @@ export const ReviewVisualCard: React.FC<ReviewVisualCardProps> = ({
 
         {/* User Info Overlay (Bottom) */}
         {userName && (
-          <div className="absolute bottom-4 left-4 z-10 flex items-center gap-2">
-            {userAvatar && (
-              <img src={userAvatar} alt={userName} className="w-8 h-8 rounded-full border border-white" />
-            )}
+          <div className="absolute bottom-4 left-4 z-10">
             <span className="text-white text-sm font-medium drop-shadow-md">{userName}</span>
           </div>
         )}
@@ -98,10 +95,7 @@ export const ReviewVisualCard: React.FC<ReviewVisualCardProps> = ({
 
             {/* User Info overlay in Modal */}
             {userName && (
-              <div className="absolute top-4 left-4 z-50 flex items-center gap-3">
-                {userAvatar && (
-                  <img src={userAvatar} alt={userName} className="w-12 h-12 rounded-full border-2 border-white shadow-lg" />
-                )}
+              <div className="absolute top-4 left-4 z-50">
                 <span className="text-white font-semibold text-lg drop-shadow-md">{userName}</span>
               </div>
             )}

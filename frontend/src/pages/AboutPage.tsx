@@ -49,9 +49,10 @@ const pageContent = {
       leftTitle: "JOIN OUR RESELLER COMMUNITY",
       leftDesc: "Be a part of our growing network and start your journey with us.",
       leftButton: "JOIN NOW",
+      leftButtonLink: "https://whatsapp.com/channel/0029VbAJ90GISTkJ7omVEA1Y",
       rightTitle: "FOR MORE INFORMATION",
       rightDesc: "Have questions? We're here to help!",
-      rightPhone: "+91 98765 43210"
+      rightPhone: "+91 8619607001"
     }
   },
   about: {
@@ -169,9 +170,14 @@ const AboutPage: React.FC = () => {
                   {pageContent.grow.banner.leftDesc}
                 </p>
               </div>
-              <button className="shrink-0 border border-[#03989E] bg-white text-[#03989E] hover:bg-[#03989E] hover:text-white transition-colors px-8 py-3 text-[11px] font-bold tracking-wider uppercase">
+              <a
+                href={pageContent.grow.banner.leftButtonLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0 border border-[#03989E] bg-white text-[#03989E] hover:bg-[#03989E] hover:text-white transition-colors px-8 py-3 text-[11px] font-bold tracking-wider uppercase inline-block"
+              >
                 {pageContent.grow.banner.leftButton}
-              </button>
+              </a>
             </div>
             
             <div className="flex-[0.8] p-8 flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-6 border-t md:border-t-0 border-[#EAE2D6]">

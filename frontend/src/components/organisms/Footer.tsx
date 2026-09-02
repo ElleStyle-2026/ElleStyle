@@ -33,11 +33,11 @@ export const Footer: React.FC = () => {
                 STAY UPDATED
               </p>
               <a
-                href="mailto:ellestylecom@gmail.com"
+                href="mailto:ellestyle12220@gmail.com"
                 className="font-sans font-medium text-sm transition-colors duration-200"
                 style={{ color: 'var(--accent)' }}
               >
-                ellestylecom@gmail.com
+                ellestyle12220@gmail.com
               </a>
             </div>
 

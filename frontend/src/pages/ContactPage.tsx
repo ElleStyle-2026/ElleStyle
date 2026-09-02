@@ -12,12 +12,12 @@ const ContactPage: React.FC = () => {
     {
       icon: Mail,
       title: 'Email',
-      details: ['ellestylecom@gmail.com', 'Replies within 1-2 business days'],
+      details: ['ellestyle12220@gmail.com', 'Replies within 1-2 business days'],
     },
     {
       icon: PhoneCall,
       title: 'Phone / WhatsApp',
-      details: ['+91 98765 43210', 'Chat for order support and updates'],
+      details: ['+91 8619607001', 'Chat for order support and updates'],
     },
     {
       icon: Clock3,

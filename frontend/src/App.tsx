@@ -10,6 +10,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@/lib/queryClient';
 import { useLiveSync } from '@/hooks/useLiveSync';
 import { ToastProvider } from '@/components/ui/ToastProvider';
+import { FloatingWhatsAppButton } from '@/components/organisms/FloatingWhatsAppButton';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || 'dummy_client_id.apps.googleusercontent.com';
 
@@ -30,6 +31,7 @@ function App() {
                 <GlobalHooks />
                 <ToastProvider />
                 <RouterProvider router={router} />
+                <FloatingWhatsAppButton />
               </CursorProvider>
             </WishlistProvider>
           </CartProvider>

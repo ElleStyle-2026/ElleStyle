@@ -13,7 +13,9 @@ import SearchPage from '@/pages/SearchPage';
 import AboutPage from '@/pages/AboutPage';
 import ContactPage from '@/pages/ContactPage';
 import CheckoutPage from '@/pages/CheckoutPage';
-import ShippingPage from '@/pages/ShippingPage';
+import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage';
+import TermsPage from '@/pages/TermsPage';
+import ShippingReturnsPage from '@/pages/ShippingReturnsPage';
 
 // Account Dashboard Imports
 import AccountLayout from '@/components/layout/AccountLayout';
@@ -164,8 +166,16 @@ export const router = createBrowserRouter([
         element: <ContactPage />,
       },
       {
+        path: 'privacy-policy',
+        element: <PrivacyPolicyPage />,
+      },
+      {
+        path: 'tos',
+        element: <TermsPage />,
+      },
+      {
         path: 'shipping',
-        element: <ShippingPage />,
+        element: <ShippingReturnsPage />,
       },
       // Additional routes will be added here
     ],

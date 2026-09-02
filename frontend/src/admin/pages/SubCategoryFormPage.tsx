@@ -81,7 +81,7 @@ export default function SubCategoryFormPage() {
     const data = new FormData();
     data.append('category', 'SubCategories');
     data.append('productSlug', (slug || 'subcat') + suffix);
-    data.append('images', newFiles[0].file!);
+    data.append('media', newFiles[0].file!);
 
     const result = await apiClient('/api/v1/upload', {
       method: 'POST',

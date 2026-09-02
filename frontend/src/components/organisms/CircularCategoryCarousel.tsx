@@ -23,43 +23,44 @@ export const CircularCategoryCarousel: React.FC<CircularCategoryCarouselProps> =
 
   return (
     <div
-      className={`${className}`}
-      style={{ backgroundColor: 'var(--bg-page)', borderBottom: '1px solid var(--border)' }}
+      className={`${className} relative`}
+      style={{
+        backgroundColor: 'var(--bg-page)',
+        borderBottom: '1px solid var(--border)',
+      }}
     >
-      <div className="max-w-[1400px] mx-auto px-4 overflow-x-auto scrollbar-hide">
-        <div className="flex items-center justify-start md:justify-center min-w-max mx-auto pb-4 mt-2 md:mt-4">
-          {categories.map((category, index) => {
+      <div className="relative max-w-[1500px] mx-auto px-4 sm:px-6 lg:px-10 overflow-x-auto scrollbar-hide">
+        <div className="flex items-start justify-center min-w-max mx-auto py-6 md:py-8 gap-5 md:gap-8 xl:gap-10">
+          {categories.map((category) => {
             const isActive = activeCategorySlug === category.slug;
             return (
-              <React.Fragment key={category._id}>
-                <Link
-                  to={`/category/${category.slug}`}
-                  className="flex flex-col items-center gap-4 group shrink-0 w-28 md:w-36 px-2"
-                  aria-label={`Browse ${category.name}`}
-                  data-cursor="explore"
-                  data-cursor-text="VIEW"
-                >
-                  <div 
-                    className={`w-24 h-24 md:w-28 md:h-28 rounded-full overflow-hidden shadow-sm transition-all duration-300 ring-2 ring-offset-4 ring-offset-[var(--bg-page)] transition-shadow ${isActive ? 'ring-[#03989E]' : 'ring-transparent group-hover:ring-[var(--accent)] group-hover:shadow-md'}`}
+              <Link
+                key={category._id}
+                to={`/category/${category.slug}`}
+                className="group shrink-0"
+                aria-label={`Browse ${category.name}`}
+                data-cursor="explore"
+                data-cursor-text="VIEW"
+              >
+                <div className="flex flex-col items-center gap-4 text-center">
+                  <div
+                    className={`relative overflow-hidden rounded-full border-[4px] bg-white transition-all duration-200 ${isActive ? 'border-[#03989E] shadow-[6px_6px_0_#03989E]' : 'border-[#03989E] shadow-[4px_4px_0_#03989E] group-hover:translate-x-[-1px] group-hover:translate-y-[-1px] group-hover:shadow-[6px_6px_0_#03989E]'}`}
+                    style={{ width: '140px', height: '140px' }}
                   >
                     <img
                       src={category.image}
                       alt={`${category.name} category`}
-                      className={`w-full h-full object-cover transition-transform duration-700 ${isActive ? 'scale-105' : 'group-hover:scale-110'}`}
+                      className="h-full w-full object-cover"
                     />
                   </div>
+
                   <span
-                    className={`font-sans font-semibold text-[13px] md:text-sm text-center leading-tight transition-colors duration-200 ${isActive ? 'text-[#03989E]' : ''}`}
-                    style={isActive ? {} : { color: 'var(--text-primary)' }}
+                    className={`max-w-[170px] font-sans text-[13px] md:text-[14px] font-black leading-[1.1] tracking-[-0.03em] uppercase transition-colors duration-200 ${isActive ? 'text-[#03989E]' : 'text-[#1b2a2e]'}`}
                   >
                     {category.name}
                   </span>
-                </Link>
-                {/* Separator */}
-                {index < categories.length - 1 && (
-                  <div className="h-20 w-[1px] bg-gray-200 mx-2 md:mx-6 shrink-0 opacity-60" />
-                )}
-              </React.Fragment>
+                </div>
+              </Link>
             );
           })}
         </div>
