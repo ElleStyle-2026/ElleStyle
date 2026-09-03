@@ -221,6 +221,7 @@ const CategoryPage: React.FC = () => {
   const selectedSubCatObj = activeSubCategories.length === 1 
     ? subCategories.find((sc) => sc.slug === activeSubCategories[0] || sc.name === activeSubCategories[0]) 
     : null;
+  const heroDescription = (selectedSubCatObj?.description || category.description || '').trim();
 
 
   const renderFilterSidebar = () => (
@@ -430,11 +431,11 @@ const CategoryPage: React.FC = () => {
           
           <DividerDecorative />
 
-          <p className="text-[14px] md:text-[16px] text-white/95 leading-relaxed max-w-2xl font-light drop-shadow">
-            {selectedSubCatObj && selectedSubCatObj.description
-              ? selectedSubCatObj.description
-              : category.description || 'Timeless designs, meticulously handmade to add elegance and charm to your sanctuary.'}
-          </p>
+          {heroDescription && (
+            <p className="text-[14px] md:text-[16px] text-white/95 leading-relaxed max-w-2xl font-light drop-shadow">
+              {heroDescription}
+            </p>
+          )}
         </div>
       </div>
 

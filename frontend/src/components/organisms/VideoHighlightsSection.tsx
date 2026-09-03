@@ -51,10 +51,7 @@ export const VideoHighlightsSection: React.FC = () => {
           title="Video"
           titleAccent="highlights"
           rightContent={
-            <>
-              Four categories, four quiet moments — each looping softly, like a<br />
-              shop window at dusk.
-            </>
+            <>A closer look at what makes each piece special — thoughtfully crafted, beautifully made, and made to be yours.</>
           }
         />
       </div>
